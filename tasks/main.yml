@@ -4,9 +4,9 @@
   tags:
     - install
 
-- import_tasks: "{{ role_path }}/tasks/settings.yml"
-  tags:
-    -  settings
+#- import_tasks: "{{ role_path }}/tasks/settings.yml"
+#  tags:
+#    -  settings
 
 - import_tasks: "{{ role_path }}/tasks/taxonomies.yml"
   tags:
@@ -14,14 +14,14 @@
     - tax
     - org
 
-- import_tasks: "{{ role_path }}/tasks/manifest.yml"
-  tags:
-    - manifest
+# - import_tasks: "{{ role_path }}/tasks/manifest.yml"
+#   tags:
+#     - manifest
 
-- import_tasks: "{{ role_path }}/tasks/products.yml"
-  tags:
-    - product
-    - products
+# - import_tasks: "{{ role_path }}/tasks/products.yml"
+#   tags:
+#     - product
+#     - products
 
 - import_tasks: "{{ role_path }}/tasks/repositories.yml"
   tags:
@@ -29,9 +29,9 @@
     - repositories
     - repository
 
-- import_tasks: "{{ role_path }}/tasks/sync_plans.yml"
-  tags:
-    - sync_plans
+# - import_tasks: "{{ role_path }}/tasks/sync_plans.yml"
+#   tags:
+#     - sync_plans
 
 - import_tasks: "{{ role_path }}/tasks/lifecycle_environments.yml"
   tags:
@@ -39,21 +39,21 @@
     - lenv
     - lenvs
 
-- import_tasks: "{{ role_path }}/tasks/content_views.yml"
-  tags:
-    - content_views
-    - content_view
-    - cvs
-    - cv
+# - import_tasks: "{{ role_path }}/tasks/content_views.yml"
+#   tags:
+#     - content_views
+#     - content_view
+#     - cvs
+#     - cv
 
-- import_tasks: "{{ role_path }}/tasks/activation_keys.yml"
-  tags:
-    - activation_keys
-    - activation_key
-    - aks
-    - ak
+# - import_tasks: "{{ role_path }}/tasks/activation_keys.yml"
+#   tags:
+#     - activation_keys
+#     - activation_key
+#     - aks
+#     - ak
 
-- import_tasks: "{{ role_path }}/tasks/domains.yml"
-  tags:
-    - domain
-    - domains
+# - import_tasks: "{{ role_path }}/tasks/domains.yml"
+#   tags:
+#     - domain
+#     - domains

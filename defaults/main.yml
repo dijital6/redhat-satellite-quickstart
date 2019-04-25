@@ -1,4 +1,8 @@
 ---
+# The master to this file is located here:
+# - /home/rheron/Playbooks/group_vars/satellite/configure_katello.yml
+# - 4/25/2019
+
 configure_katello_nailgun_package: nailgun
 configure_katello_username: admin
 configure_katello_password: "{{ vault_katello_admin_password | default('changeme') }}"
@@ -21,7 +25,7 @@ configure_katello_force_manifest_upload: false
 # TODO, allow more than 1 manifest upload
 #configure_katello_manifest_name: "{{ ansible_fqdn }}"
 #configure_rhsm_username: myuser
-#configure_rhsm_password: "{{ vault_rhsm_password | default('changeme') }}" 
+#configure_rhsm_password: "{{ vault_rhsm_password | default('changeme') }}"
 #configure_rhsm_verify_ssl: false
 #configure_katello_subscriptions:
 #  - { pool_id: xxxxx, state: present, quantity: 9 }
@@ -50,7 +54,7 @@ configure_katello_force_manifest_upload: false
 #    repositories:
 #      - basearch: x86_64
 #  - name: Red Hat OpenShift Container Platform 3.6 (RPMs)
-#    repo_name: Red Hat OpenShift Container Platform 3.6 RPMs x86_64 
+#    repo_name: Red Hat OpenShift Container Platform 3.6 RPMs x86_64
 #    organization: AMCE
 #    product: Red Hat OpenShift Container Platform
 #    state: enabled
@@ -94,7 +98,7 @@ configure_katello_force_manifest_upload: false
 #      - name: Red Hat Enterprise Linux 7 Server - Extras RPMs x86_64
 #        product: Red Hat Enterprise Linux Server
 #      - name: Red Hat Enterprise Linux Fast Datapath RHEL 7 Server RPMs x86_64 7Server
-#        product: Red Hat Enterprise Linux Fast Datapath 
+#        product: Red Hat Enterprise Linux Fast Datapath
 #      - name: Red Hat OpenShift Container Platform 3.6 RPMs x86_64
 #        product: Red Hat OpenShift Container Platform
 #    activation_key: openshift

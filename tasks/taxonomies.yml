@@ -5,9 +5,11 @@
     password: "{{ configure_katello_password }}"
     server_url: "{{ configure_katello_server_url }}"
     verify_ssl: "{{ configure_katello_verify_ssl }}"
-    name: "{{ item.name }}"
-    state: "{{ item.state }}"
-  with_items: "{{ configure_katello_organizations }}"
+    name: "{{ item.0.name }}"
+    state: "{{ item.0.state }}"
+  with_subelements:
+    - "{{ configure_katello_organizations }}"
+    - pool
   when: configure_katello_organizations is defined
 
 - name: taxonomies | create locations

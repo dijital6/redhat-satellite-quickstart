@@ -1,0 +1,16 @@
+---
+rhel_cv:
+  - name: "{{ rhel_cv_name }}"
+    state: present
+    product: &cv_product_rhel Red Hat Enterprise Linux Server
+    repos:
+      - name: "Red Hat Enterprise Linux {{ rhel_major }} {{ rhel_major }} RPMs {{ arch }} {{ rhel_major }}Server"
+        product: *cv_product_rhel
+      - name: "Red Hat Enterprise Linux {{ rhel_major }} {{ rhel_major }} - Extras RPMs {{ arch }}"
+        product: *cv_product_rhel
+      - name: "Red Hat Satellite Tools {{ satellite_version }} for RHEL {{ rhel_major }} {{ rhel_major }} RPMs {{ arch }}"
+        product: *cv_product_rhel
+      - name: "Red Hat Enterprise Linux {{ rhel_major }} {{ rhel_major }} - Supplementary RPMs {{ arch }} {{ rhel_major }}Server"
+        product: *cv_product_rhel
+      - name: "Red Hat Enterprise Linux {{ rhel_major }} {{ rhel_major }} - Optional RPMs {{ arch }} {{ rhel_major }}Server"
+        product: *cv_product_rhel

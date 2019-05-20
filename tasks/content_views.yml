@@ -1,4 +1,12 @@
 ---
+
+#- name: Show content views
+#  debug:
+#    msg: "{{ item.1.state }}"
+#  with_subelements:
+#    - "{{ configure_katello_organizations }}"
+#    - content_views
+
 - name: Create Content Views
   katello_content_view:
     username: "{{ configure_katello_username }}"
@@ -12,9 +20,9 @@
   with_subelements:
     - "{{ configure_katello_organizations }}"
     - content_views
-  when: 
-    - item.0.state == "present"
-    - item.1.name is defined
+#  when:
+#    - item.0.state == "present"
+#    - item.1.name is defined
 
 # TODO: refactor and test the below code
 #- name: Create Content View Filters

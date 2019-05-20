@@ -27,7 +27,7 @@
 #    username: "{{ configure_rhsm_username }}"
 #    password: "{{ configure_rhsm_password }}"
 #    validate_certs: "{{ configure_rhsm_verify_ssl }}"
-#    path: "{{ configure_katello_manifest_path}}/{{ item.0.manifest }}.zip" 
+#    path: "{{ configure_katello_manifest_path}}/{{ item.0.manifest }}.zip"
 #  with_subelements:
 #    - "{{ configure_katello_organizations }}"
 #    - pool
@@ -61,7 +61,7 @@
     server_url: "{{ configure_katello_server_url }}"
     verify_ssl: "{{ configure_katello_verify_ssl }}"
     organization: "{{ item.0.name }}"
-    manifest_path: "/root/{{ item.0.manifest }}.zip" 
+    manifest_path: "/root/{{ item.0.manifest }}.zip"
     redhat_repository_url: "{{ item.0.manifest_url | default(omit) }}"
     state: present
   with_subelements:

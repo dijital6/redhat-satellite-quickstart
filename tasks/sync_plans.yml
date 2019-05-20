@@ -5,11 +5,21 @@
     password: "{{ configure_katello_password }}"
     server_url: "{{ configure_katello_server_url }}"
     verify_ssl: "{{ configure_katello_verify_ssl }}"
-    name: "{{ item.name }}"
-    organization: "{{ item.organization }}"
-    interval: "{{ item.interval }}"
-    enabled: "{{ item.enabled }}"
-    sync_date: "{{ item.sync_date }}"
-    products: "{{ item.products }}"
-  with_items: "{{ configure_katello_sync_plans }}"
-  when: configure_katello_sync_plans is defined
+    name: "{{ item.1.name }}"
+    organization: "{{ item.0.name }}"
+    interval: "{{ item.1.interval }}"
+    enabled: "{{ item.1.enabled }}"
+    sync_date: "{{ item.1.date }}"
+    products: "{{ item.1.products }}"
+  with_subelements:
+    - "{{ configure_katello_organizations }}"
+    - sync_plans
+  when: configure_katello_sync_plans
+
+#- name: show me sync plans
+#  debug:
+#    msg: "products: {{ item.1.products }} org: {{ item.0.name }} name: {{ item.1.name }} interval: {{ item.0.name }} enabled {{ item.1.enabled }} sync_date {{ item.1.date }}"
+#  with_subelements:
+#    - "{{ configure_katello_organizations }}"
+#    - sync_plans
+#  when: configure_katello_sync_plans

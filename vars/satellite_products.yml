@@ -1,162 +1,162 @@
 ---
 ansible:
-  - reposet: Red Hat Ansible Engine {{ ansible_major }} RPMs for Red Hat Enterprise Linux {{ rhel_major }} Server
-    repo_name: Red Hat Ansible Engine {{ ansible_major }} RPMs for Red Hat Enterprise Linux {{ rhel_major }} Server {{ arch }}
+  - reposet: "Red Hat Ansible Engine {{ ansible_major }} RPMs for Red Hat Enterprise Linux {{ rhel_major }} Server"
+    repo_name: "Red Hat Ansible Engine {{ ansible_major }} RPMs for Red Hat Enterprise Linux {{ rhel_major }} Server {{ arch }}"
     product: Red Hat Ansible Engine
     state: enabled
     repositories:
-      - basearch: {{ arch }}
+      - basearch: "{{ arch }}"
 
 rhel:
-  - reposet: Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)
+  - reposet: "Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)"
     product: &product_rhel Red Hat Enterprise Linux Server
-    repo_name: Red Hat Enterprise Linux {{ rhel_major }} Server RPMs {{ arch }} {{ rhel_major }}Server
+    repo_name: "Red Hat Enterprise Linux {{ rhel_major }} Server RPMs {{ arch }} {{ rhel_major }}Server"
     state: enabled
     repositories:
-      - releasever: {{ rhel_major }}Server
-        basearch: {{ arch }}
-  - reposet: Red Hat Enterprise Linux {{ rhel_major }} Server (Kickstart)
+      - releasever: "{{ rhel_major }}Server"
+        basearch: "{{ arch }}"
+  - reposet: "Red Hat Enterprise Linux {{ rhel_major }} Server (Kickstart)"
     product: *product_rhel
-    repo_name: Red Hat Enterprise Linux {{ rhel_major }} Server Kickstart {{ arch }} {{ rhel_major }}Server
+    repo_name: "Red Hat Enterprise Linux {{ rhel_major }} Server Kickstart {{ arch }} {{ rhel_major }}Server"
     state: enabled
     repositories:
-      - releasever: {{ rhel_major }}Server
-        basearch: {{ arch }}
-  - reposet: Red Hat Enterprise Linux {{ rhel_major }} Server - Extras (RPMs)
+      - releasever: "{{ rhel_major }}Server"
+        basearch: "{{ arch }}"
+  - reposet: "Red Hat Enterprise Linux {{ rhel_major }} Server - Extras (RPMs)"
     product: *product_rhel
-    repo_name: Red Hat Enterprise Linux {{ rhel_major }} Server - Extras RPMs {{ arch }}
+    repo_name: "Red Hat Enterprise Linux {{ rhel_major }} Server - Extras RPMs {{ arch }}"
     state: enabled
     repositories:
-      - basearch: {{ arch }}
-  - reposet: Red Hat Satellite Tools {{ satellite_version }} (for RHEL {{ rhel_major }} Server) (RPMs)
+      - basearch: "{{ arch }}"
+  - reposet: "Red Hat Satellite Tools {{ satellite_version }} (for RHEL {{ rhel_major }} Server) (RPMs)"
     product: *product_rhel
-    repo_name: Red Hat Satellite Tools {{ satellite_version }} for RHEL {{ rhel_major }} Server RPMs {{ arch }}
+    repo_name: "Red Hat Satellite Tools {{ satellite_version }} for RHEL {{ rhel_major }} Server RPMs {{ arch }}"
     state: enabled
     repositories:
-      - basearch: {{ arch }}
-  - reposet: Red Hat Enterprise Linux {{ rhel_major }} Server - RH Common (RPMs)
+      - basearch: "{{ arch }}"
+  - reposet: "Red Hat Enterprise Linux {{ rhel_major }} Server - RH Common (RPMs)"
     product: *product_rhel
-    repo_name: Red Hat Enterprise Linux {{ rhel_major }} Server - RH Common RPMs {{ arch }} {{ rhel_major }}Server
+    repo_name: "Red Hat Enterprise Linux {{ rhel_major }} Server - RH Common RPMs {{ arch }} {{ rhel_major }}Server"
     state: enabled
     repositories:
-      - releasever: {{ rhel_major }}Server
-        basearch: {{ arch }}
-  - reposet: Red Hat Enterprise Linux {{ rhel_major }} Server - Supplementary (RPMs)
+      - releasever: "{{ rhel_major }}Server"
+        basearch: "{{ arch }}"
+  - reposet: "Red Hat Enterprise Linux {{ rhel_major }} Server - Supplementary (RPMs)"
     product: *product_rhel
-    repo_name: Red Hat Enterprise Linux {{ rhel_major }} Server - Supplementary RPMs {{ arch }} {{ rhel_major }}Server
+    repo_name: "Red Hat Enterprise Linux {{ rhel_major }} Server - Supplementary RPMs {{ arch }} {{ rhel_major }}Server"
     state: enabled
     repositories:
-      - releasever: {{ rhel_major }}Server
-        basearch: {{ arch }}
-  - reposet: Red Hat Enterprise Linux {{ rhel_major }} Server - Optional (RPMs)
+      - releasever: "{{ rhel_major }}Server"
+        basearch: "{{ arch }}"
+  - reposet: "Red Hat Enterprise Linux {{ rhel_major }} Server - Optional (RPMs)"
     product: *product_rhel
-    repo_name: Red Hat Enterprise Linux {{ rhel_major }} Server - Optional RPMs {{ arch }} {{ rhel_major }}Server
+    repo_name: "Red Hat Enterprise Linux {{ rhel_major }} Server - Optional RPMs {{ arch }} {{ rhel_major }}Server"
     state: enabled
     repositories:
-      - releasever: {{ rhel_major }}Server
-        basearch: {{ arch }}
+      - releasever: "{{ rhel_major }}Server"
+        basearch: "{{ arch }}"
 
 rhelha:
-  - reposet: Red Hat Enterprise Linux High Availability (for RHEL {{ rhel_major }} Server) (RPMs)
-    repo_name: Red Hat Enterprise Linux High Availability for RHEL {{ rhel_major }} Server RPMs {{ arch }} {{ rhel_major }}Server
-    product: Red Hat Enterprise Linux High Availability for {{ arch }}
+  - reposet: "Red Hat Enterprise Linux High Availability (for RHEL {{ rhel_major }} Server) (RPMs)"
+    repo_name: "Red Hat Enterprise Linux High Availability for RHEL {{ rhel_major }} Server RPMs {{ arch }} {{ rhel_major }}Server"
+    product: "Red Hat Enterprise Linux High Availability for {{ arch }}"
     state: enabled
     repositories:
-      - releasever: {{ rhel_major }}Server
-        basearch: {{ arch }}
+      - releasever: "{{ rhel_major }}Server"
+        basearch: "{{ arch }}"
 
 rhelrs:
-  - reposet: Red Hat Enterprise Linux Resilient Storage (for RHEL {{ rhel_major }} Server) (RPMs)
-    repo_name: Red Hat Enterprise Linux Resilient Storage for RHEL {{ rhel_major }} Server RPMs {{ arch }} {{ rhel_major }}Server
-    product: Red Hat Enterprise Linux Resilient Storage for {{ arch }}
+  - reposet: "Red Hat Enterprise Linux Resilient Storage (for RHEL {{ rhel_major }} Server) (RPMs)"
+    repo_name: "Red Hat Enterprise Linux Resilient Storage for RHEL {{ rhel_major }} Server RPMs {{ arch }} {{ rhel_major }}Server"
+    product: "Red Hat Enterprise Linux Resilient Storage for {{ arch }}"
     state: enabled
     repositories:
-      - releasever: {{ rhel_major }}Server
-        basearch: {{ arch }}
+      - releasever: "{{ rhel_major }}Server"
+        basearch: "{{ arch }}"
 
 osp:
-  - reposet: Red Hat OpenStack Platform {{ osp_major }} Operational Tools for RHEL {{ rhel_major }} (RPMs)
-    repo_name: Red Hat OpenStack Platform {{ osp_major }} Operational Tools for RHEL {{ rhel_major }} RPMs {{ arch }}
+  - reposet: "Red Hat OpenStack Platform {{ osp_major }} Operational Tools for RHEL {{ rhel_major }} (RPMs)"
+    repo_name: "Red Hat OpenStack Platform {{ osp_major }} Operational Tools for RHEL {{ rhel_major }} RPMs {{ arch }}"
     product: Red Hat OpenStack
     state: enabled
     repositories:
-      - basearch: {{ arch }}
-  - reposet: Red Hat OpenStack Platform {{ osp_major }} for RHEL {{ rhel_major }} (RPMs)
-    repo_name: Red Hat OpenStack Platform {{ osp_major }} for RHEL {{ rhel_major }} RPMs {{ arch }}
+      - basearch: "{{ arch }}"
+  - reposet: "Red Hat OpenStack Platform {{ osp_major }} for RHEL {{ rhel_major }} (RPMs)"
+    repo_name: "Red Hat OpenStack Platform {{ osp_major }} for RHEL {{ rhel_major }} RPMs {{ arch }}"
     product: Red Hat OpenStack
     state: enabled
     repositories:
-      - basearch: {{ arch }}
-  - reposet: Red Hat OpenStack Platform {{ osp_major }} Developer Tools for RHEL {{ rhel_major }} (RPMs)
-    repo_name: Red Hat OpenStack Platform {{ osp_major }} Developer Tools for RHEL {{ rhel_major }} RPMs {{ arch }}
+      - basearch: "{{ arch }}"
+  - reposet: "Red Hat OpenStack Platform {{ osp_major }} Developer Tools for RHEL {{ rhel_major }} (RPMs)"
+    repo_name: "Red Hat OpenStack Platform {{ osp_major }} Developer Tools for RHEL {{ rhel_major }} RPMs {{ arch }}"
     product: Red Hat OpenStack
     state: enabled
     repositories:
-      - basearch: {{ arch }}
+      - basearch: "{{ arch }}"
 
 ceph_osd:
-  - reposet: Red Hat Ceph Storage OSD {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)
-    repo_name: Red Hat Ceph Storage OSD {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server RPMs {{ arch }}
+  - reposet: "Red Hat Ceph Storage OSD {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)"
+    repo_name: "Red Hat Ceph Storage OSD {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server RPMs {{ arch }}"
     product: Red Hat Ceph Storage OSD
     state: enabled
     repositories:
-      - basearch: {{ arch }}
+      - basearch: "{{ arch }}"
 
 ceph_mon:
-  - reposet: Red Hat Ceph Storage MON {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)
-    repo_name: Red Hat Ceph Storage MON {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server RPMs {{ arch }}
+  - reposet: "Red Hat Ceph Storage MON {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)"
+    repo_name: "Red Hat Ceph Storage MON {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server RPMs {{ arch }}"
     product: Red Hat Ceph Storage MON
     state: enabled
     repositories:
-      - basearch: {{ arch }}
+      - basearch: "{{ arch }}"
 
 ceph:
-  - reposet: Red Hat Ceph Storage Tools {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)
-    repo_name: Red Hat Ceph Storage Tools {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server RPMs {{ arch }}
+  - reposet: "Red Hat Ceph Storage Tools {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)"
+    repo_name: "Red Hat Ceph Storage Tools {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server RPMs {{ arch }}"
     product: Red Hat Ceph Storage
     state: enabled
     repositories:
-      - basearch: {{ arch }}
+      - basearch: "{{ arch }}"
 
 eap:
-  - reposet: JBoss Enterprise Application Platform {{ jboss_major }}.{{ jboss_minor }} (RHEL {{ rhel_major }} Server) (RPMs)
-    repo_name: JBoss Enterprise Application Platform {{ jboss_major }}.{{ jboss_minor }} RHEL {{ rhel_major }} Server RPMs {{ arch }}
+  - reposet: "JBoss Enterprise Application Platform {{ jboss_major }}.{{ jboss_minor }} (RHEL {{ rhel_major }} Server) (RPMs)"
+    repo_name: "JBoss Enterprise Application Platform {{ jboss_major }}.{{ jboss_minor }} RHEL {{ rhel_major }} Server RPMs {{ arch }}"
     product: JBoss Enterprise Application Platform
     state: enabled
     repositories:
-      - basearch: {{ arch }}
+      - basearch: "{{ arch }}"
 
 rhvm:
-  - reposet: Red Hat Virtualization Manager v{{ rhv_major }}.{{ rhv_minor }} (RHEL {{ rhel_major }} Server) (RPMs)
+  - reposet: "Red Hat Virtualization Manager v{{ rhv_major }}.{{ rhv_minor }} (RHEL {{ rhel_major }} Server) (RPMs)"
     product: &rhvm_product Red Hat Virtualization Manager
     state: enabled
     repositories:
-      - basearch: {{ arch }}
-  - reposet: Red Hat Virtualization Manager {{ rhv_major }} Tools (RHEL {{ rhel_major }} Server) (RPMs)
+      - basearch: "{{ arch }}"
+  - reposet: "Red Hat Virtualization Manager {{ rhv_major }} Tools (RHEL {{ rhel_major }} Server) (RPMs)"
     product: *rhvm_product
     state: enabled
     repositories:
-      - basearch: {{ arch }}
+      - basearch: "{{ arch }}"
 
 rhvh:
-  - reposet: Red Hat Virtualization Host {{ rhel_major }} (RPMs)
-    repo_name: Red Hat Virtualization Host {{ rhel_major }} RPMs {{ arch }}
+  - reposet: "Red Hat Virtualization Host {{ rhel_major }} (RPMs)"
+    repo_name: "Red Hat Virtualization Host {{ rhel_major }} RPMs {{ arch }}"
     product: Red Hat Virtualization Host
     state: enabled
     repositories:
-      - basearch: {{ arch }}
+      - basearch: "{{ arch }}"
 
 rhv:
-  - reposet: Red Hat Virtualization {{ rhv_major }} Management Agents for RHEL {{ rhel_major }} (RPMs)
-    repo_name: Red Hat Virtualization {{ rhv_major }} Management Agents for RHEL {{ rhel_major }} RPMs {{ arch }} {{ rhel_major }}Server
+  - reposet: "Red Hat Virtualization {{ rhv_major }} Management Agents for RHEL {{ rhel_major }} (RPMs)"
+    repo_name: "Red Hat Virtualization {{ rhv_major }} Management Agents for RHEL {{ rhel_major }} RPMs {{ arch }} {{ rhel_major }}Server"
     product: &rhv_product Red Hat Virtualization
     state: enabled
     repositories:
-      - releasever: {{ rhel_major }}Server
-        basearch: {{ arch }}
-  - reposet: Red Hat Virtualization {{ rhv_major }} Tools (RHEL {{ rhel_major }} Server) (RPMs)
-    repo_name: Red Hat Virtualization {{ rhv_major }} Tools RHEL {{ rhel_major }} Server RPMs {{ arch }}
+      - releasever: "{{ rhel_major }}Server"
+        basearch: "{{ arch }}"
+  - reposet: "Red Hat Virtualization {{ rhv_major }} Tools (RHEL {{ rhel_major }} Server) (RPMs)"
+    repo_name: "Red Hat Virtualization {{ rhv_major }} Tools RHEL {{ rhel_major }} Server RPMs {{ arch }}"
     product: *rhv_product
     state: enabled
     repositories:
-      - basearch: {{ arch }}
+      - basearch: "{{ arch }}"

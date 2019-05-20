@@ -1,5 +1,5 @@
 ---
-- name: taxonomies | Create Organizations
+- name: taxonomies | create Organizations
   foreman_organization:
     username: "{{ configure_katello_username }}"
     password: "{{ configure_katello_password }}"
@@ -10,7 +10,6 @@
   with_subelements:
     - "{{ configure_katello_organizations }}"
     - pool
-  when: configure_katello_organizations is defined
 
 - name: taxonomies | create locations
   foreman_location:
@@ -22,4 +21,3 @@
     state: "{{ item.state }}"
     organizations: "{{ item.orgs }}"
   with_items: "{{ configure_katello_locations }}"
-  when: configure_katello_locations is defined

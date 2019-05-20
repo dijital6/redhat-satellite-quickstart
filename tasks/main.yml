@@ -9,8 +9,8 @@
   include_vars: "../vars/satellite_products.yml"
 
 # Create orgs and locations
-#- import_tasks: "{{ role_path }}/tasks/taxonomies.yml"
-#  tags: [org,location,taxonomies]
+- import_tasks: "{{ role_path }}/tasks/taxonomies.yml"
+  tags: [org,location,taxonomies]
 
 #- import_tasks: "{{ role_path }}/tasks/manifest.yml"
 #  tags:

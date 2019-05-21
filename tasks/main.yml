@@ -24,10 +24,9 @@
   import_tasks: "{{ role_path }}/tasks/manifest.yml"
   tags: [katello,manifest]
 
-#- import_tasks: "{{ role_path }}/tasks/redhat_products.yml"
-#  tags:
-#    - repos
-#    - repositories
+- name: enable red hat products repos and repositories
+  import_tasks: "{{ role_path }}/tasks/redhat_products.yml"
+  tags: [katello,repos,products]
 
 #- import_tasks: "{{ role_path }}/tasks/sync_plans.yml"
 #  tags:

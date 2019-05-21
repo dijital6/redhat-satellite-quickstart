@@ -43,7 +43,7 @@ configure_katello_organizations:
   - name: ACME
     state: present
     manifest: Satellite_All_Latest
-    manifest_url:
+    cdn_url: https://cdn.redhat.com
     pool:
       - id: 999
         state: present

@@ -24,7 +24,7 @@
     verify_ssl: "{{ configure_katello_verify_ssl }}"
     organization: "{{ item.name }}"
     manifest_path: "/root/{{ item.manifest }}.zip"
-    redhat_repository_url: "{{ item.manifest_url | default(omit) }}"
+    redhat_repository_url: "{{ item.cdn_url | default(omit) }}"
     state: present
   with_items: "{{ configure_katello_organizations }}"
   loop_control: 

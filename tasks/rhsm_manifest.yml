@@ -1,4 +1,7 @@
 ---
+
+#TODO: this has not been tested
+
 - name: manifest | Attach subs
   redhat_manifest:
     name: "{{ item.0.manifest }}"

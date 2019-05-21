@@ -32,12 +32,9 @@
   import_tasks: "{{ role_path }}/tasks/sync_plans.yml"
   tags: [katello,sync_plans]
 
-# - import_tasks: "{{ role_path }}/tasks/content_views.yml"
-#   tags:
-#     - content_views
-#     - content_view
-#     - cvs
-#     - cv
+- name: create content views
+  import_tasks: "{{ role_path }}/tasks/content_views.yml"
+  tags: [katello,cv]
 
 #- import_tasks: "{{ role_path }}/tasks/activation_keys.yml"
 #  tags:

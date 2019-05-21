@@ -56,7 +56,7 @@ configure_katello_organizations:
       - name: Orlando
         state: present
     products: "{{ rhel }} + {{ ansible }}" #refer to ../vars/satellite_content_views.yml
-    content_views: "{{ rhel_cv }}"         #refer to ../vars/satellite_products.yml
+    content_views: "{{ rhel_cv }} + {{ ansible_cv }}"         #refer to ../vars/satellite_products.yml
     sync_plans:
       - name: Red Hat Sync Plan
         date: "2017-01-01 00:00:00"
@@ -68,15 +68,4 @@ configure_katello_organizations:
 
 # Content views
 rhel_cv_name: "cv-os-rhel{{ rhel_major }}"
-
-
-configure_katello_sync_plans:
-  - name: Red Hat Sync Plan
-    organization: ACME
-    interval: daily
-    enabled: true
-    sync_date: "2017-01-01 00:00:00"
-    products:
-      - name: Red Hat Enterprise Linux Server
-      - name: Red Hat Enterprise Linux Fast Datapath
-      - name: Red Hat OpenShift Container Platfor
+ansible_cv_name: "cv-app-ansible"

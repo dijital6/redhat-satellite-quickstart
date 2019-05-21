@@ -25,6 +25,10 @@ configure_katello_download_manifest: false
 configure_katello_proxy: false
 extra_katello_proxy_args: ""
 
+# sync repos
+configure_katello_sync_plans: true
+run_katello_sync: false
+
 # product variables
 rhel_major: 7
 rhel_minor: 6
@@ -44,24 +48,35 @@ configure_katello_organizations:
     state: present
     manifest: Satellite_All_Latest
     cdn_url: https://cdn.redhat.com
-    pool:
+    pool:   # this is required for attaching subs to a manifest on RHSM
       - id: 999
         state: present
         quantity: 9
     location:
       - name: Orlando
         state: present
-    products: "{{ rhel }} + {{ ansible }}"
-    content_views: "{{ rhel_cv }}"
+    products: "{{ rhel }} + {{ ansible }}" #refer to ../vars/satellite_content_views.yml
+    content_views: "{{ rhel_cv }}"         #refer to ../vars/satellite_products.yml
     sync_plans:
       - name: Red Hat Sync Plan
         date: "2017-01-01 00:00:00"
         interval: daily
         enabled: true
         products:
-          - name: "Red Hat Enterprise Linux Server"
-          - name: "Red Hat Ansible Engine"
+          - name: Red Hat Enterprise Linux Server
+          - name: Red Hat Ansible Engine
 
 # Content views
 rhel_cv_name: "cv-os-rhel{{ rhel_major }}"
 
+
+configure_katello_sync_plans:
+  - name: Red Hat Sync Plan
+    organization: ACME
+    interval: daily
+    enabled: true
+    sync_date: "2017-01-01 00:00:00"
+    products:
+      - name: Red Hat Enterprise Linux Server
+      - name: Red Hat Enterprise Linux Fast Datapath
+      - name: Red Hat OpenShift Container Platfor

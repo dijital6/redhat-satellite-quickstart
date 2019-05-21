@@ -14,12 +14,14 @@
   with_subelements:
     - "{{ configure_katello_organizations }}"
     - sync_plans
+  loop_control:
+    label: "{{ item.1.products }}"
   when: configure_katello_sync_plans
+  tags: [sync_plans]
+  ignore_errors: yes
 
-#- name: show me sync plans
-#  debug:
-#    msg: "products: {{ item.1.products }} org: {{ item.0.name }} name: {{ item.1.name }} interval: {{ item.0.name }} enabled {{ item.1.enabled }} sync_date {{ item.1.date }}"
-#  with_subelements:
-#    - "{{ configure_katello_organizations }}"
-#    - sync_plans
-#  when: configure_katello_sync_plans
+- debug:
+    msg: | 
+      Currently the sync plan is created but it does not add products 
+      to the sync plan it creates. This why we are ingore_errors for katello_sync_plan.
+      Issue #273 as been raised with foreman-ansible-modules.

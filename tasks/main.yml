@@ -28,9 +28,9 @@
   import_tasks: "{{ role_path }}/tasks/redhat_products.yml"
   tags: [katello,repos,products]
 
-#- import_tasks: "{{ role_path }}/tasks/sync_plans.yml"
-#  tags:
-#    - sync_plans
+- name: create sync plans
+  import_tasks: "{{ role_path }}/tasks/sync_plans.yml"
+  tags: [katello,sync_plans]
 
 # - import_tasks: "{{ role_path }}/tasks/content_views.yml"
 #   tags:

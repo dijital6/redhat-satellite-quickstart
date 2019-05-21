@@ -1,20 +1,28 @@
 ---
 - name: include satellite content views variables
   include_vars: "../vars/satellite_content_views.yml"
+  tags: [always]
 
 - name: include satellite content views variables
   include_vars: "../vars/satellite_content_views.yml"
+  tags: [always]
 
 - name: include satellite products variables
   include_vars: "../vars/satellite_products.yml"
+  tags: [always]
 
-# Create orgs and locations
-- import_tasks: "{{ role_path }}/tasks/taxonomies.yml"
-  tags: [org,location,taxonomies]
+- name: setup epel repo, install python-pip and install nailgun pip
+  import_tasks: "{{ role_path }}/tasks/install.yml"
+  when: configure_katello_nailgun_install
+  tags: [nailgun]
 
-#- import_tasks: "{{ role_path }}/tasks/manifest.yml"
-#  tags:
-#    - manifest
+- name: create orgs and locations
+  import_tasks: "{{ role_path }}/tasks/taxonomies.yml"
+  tags: [katello,org,location,taxonomies]
+
+- name: setup manifest
+  import_tasks: "{{ role_path }}/tasks/manifest.yml"
+  tags: [katello,manifest]
 
 #- import_tasks: "{{ role_path }}/tasks/redhat_products.yml"
 #  tags:

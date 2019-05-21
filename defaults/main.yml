@@ -3,6 +3,11 @@
 # - /home/rheron/Playbooks/group_vars/satellite/configure_katello.yml
 # - 4/25/2019
 
+
+# install nailgun package
+configure_katello_nailgun_package: "git+https://github.com/SatelliteQE/nailgun.git@master#egg=nailgun"
+configure_katello_nailgun_install: true
+
 # Satellite server credentials
 configure_katello_username: admin
 configure_katello_password: "{{ vault_katello_admin_password | default('changeme') }}"

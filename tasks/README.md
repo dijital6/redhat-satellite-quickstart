@@ -37,21 +37,6 @@ sudo yum install python-six pytz python-netaddr
 
 Role Variables
 --------------
-Set this to configure the Nailgun requirement, set to false to disable.
-
-```
-configure_katello_install_deps: true
-configure_katello_nailgun_package: "git+https://github.com/SatelliteQE/#nailgun.git@master#egg=nailgun"
-```
-
-Provide connection details for Satellite. For EC2 instances ansible_fqdn pick up the internal hostname.
-
-```
-configure_katello_username: admin
-configure_katello_password: "{{ your_vault_pass_variable | default('changeme') }}"
-configure_katello_server_url: "https://{{ satellite_server_hostname }}"
-configure_katello_verify_ssl: no
-```
 
 #### Working with manifest
 

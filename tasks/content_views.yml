@@ -20,9 +20,27 @@
   with_subelements:
     - "{{ configure_katello_organizations }}"
     - content_views
-#  when:
-#    - item.0.state == "present"
-#    - item.1.name is defined
+  loop_control:
+    label: "{{ item.1.name }}"
+  register: created_content_view
+  tags: [cv]
+
+
+# TODO: this module appears to be broken, need to create an issue
+#- name: publish recently changed content view
+#  katello_content_view_version:
+#    username: "{{ configure_katello_username }}"
+#    password: "{{ configure_katello_password }}"
+#    server_url: "{{ configure_katello_server_url }}"
+#    content_view: "{{ item.1.name }}"
+#    organizaiton: "{{ item.0.name }}"
+#    current_lifecycle_environment: Library
+#  with_subelements:
+#    - "{{ configure_katello_organizations }}"
+#    - content_views
+#  loop_control:
+#    label: "{{ item.1.name }}"
+#  when: created_content_view.changed
 
 # TODO: refactor and test the below code
 #- name: Create Content View Filters

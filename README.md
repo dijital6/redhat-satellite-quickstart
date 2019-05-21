@@ -1,18 +1,45 @@
-Configure Katello
-=========
+ansible-role-configure-katello
+===============================
 
-This Role configures and manages Katello, well that is its aim. Right now it works for Red Hat Satellite 6.2, which is my current usecase.
-It would be trvial to get it working with a new version or Katello, PRs welcome.
+This role configures your Satellite:
+
+ - Create organizations
+ - Uploads manifest
+ - Creates locations
+ - Create sync plans
+ - Create contentveiws
+ - Enables products
+ - Create life cycle environments
+
 
 Requirements
 ------------
+Requires:
 
-Requires Ansible Modules in https://github.com/theforeman/foreman-ansible-modules
+1. [Ansible Modules](https://github.com/theforeman/foreman-ansible-modules)
+2. [Nailgun](https://github.com/SatelliteQE/#nailgun.git@master#egg=nailgun)
+3. Packages: python-pip, python-six, pytz, python-netaddr
+4. EPEL: provides python-pip on RHEL 7
+
+Items 2-4 can be setup by setting the variable `configure_katello_nailgun_install` to true.
+
+**Nailgun install manual steps on RHEL 7**
+
+Nailgun is installed on the Satellite server.
+
+```
+sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum-config-manager --disable epel
+sudo yum install python2-pip --enablerepo="epel"
+sudo pip install git+https://github.com/SatelliteQE/nailgun.git@master#egg=nailgun
+sudo yum install python-six pytz python-netaddr
+```
+
 
 Role Variables
 --------------
 
-See defaults/mail.yml file 
+See defaults/main.yml file 
 
 Example Playbook
 ----------------

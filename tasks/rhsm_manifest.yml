@@ -11,6 +11,8 @@
   with_subelements:
     - "{{ configure_katello_organizations }}"
     - pool
+  loop_control:
+    label: "{{ item.0.manifest }}"
   when:
     - not( (item.1.id is none ) or (item.1.id | trim == '') )
     - configure_katello_create_manifest
@@ -29,6 +31,8 @@
   with_subelements:
     - "{{ configure_katello_organizations }}"
     - pool
+  loop_control:
+    label: "{{ item.0.manifest }}"
   when:
     - item.0.manifest is defined and configure_katello_download_manifest
     - configure_katello_download_manifest

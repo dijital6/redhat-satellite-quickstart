@@ -17,8 +17,9 @@ configure_katello_verify_ssl: false
 # Satellite manifest
 configure_katello_copy_manifest: true
 configure_katello_force_manifest_upload: false
+configure_katello_manifest_path: ""
+configure_katello_create_manifest: false
 configure_katello_download_manifest: false
-configure_katello_manifest_path: /home/rheron/Playbooks/files/satellite_manifest
 
 # Configure satellite to use a proxy
 configure_katello_proxy: false

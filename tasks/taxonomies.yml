@@ -8,6 +8,8 @@
     name: "{{ item.name }}"
     state: "{{ item.state }}"
   with_items: "{{ configure_katello_organizations }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: taxonomies | create locations
   foreman_location:
@@ -21,3 +23,5 @@
   with_subelements:
     - "{{ configure_katello_organizations }}"
     - location
+  loop_control:
+    label: "{{ item.1.name }}"

@@ -1,57 +1,20 @@
 ---
-- name: manifest | Attach subs
-  redhat_manifest:
-    name: "{{ item.0.manifest }}"
-    username: "{{ configure_rhsm_username }}"
-    password: "{{ configure_rhsm_password }}"
-    pool_id: "{{ item.1.id }}"
-    quantity: "{{ item.1.quantity }}"
-    state: "{{ item.1.state }}"
-    validate_certs: "{{ configure_rhsm_verify_ssl }}"
-  with_subelements:
-    - "{{ configure_katello_organizations }}"
-    - pool
-  when:
-    - not( (item.1.id is none ) or (item.1.id | trim == '') )
-    - not configure_katello_copy_manifest
-  register: subs
-  environment:
-    http_proxy: "{{ (configure_katello_proxy is defined) | ternary( #configure_katello_proxy | urlsplit('scheme')) + '://' + configure_katello_proxy_username + ':' + configure_katello_proxy_password + '@' #+ configure_katello_proxy | urlsplit('hostname')) + ':' + #(configure_katello_proxy | rlsplit('port') | string), '') }}"
-    https_proxy: "{{ (configure_katello_proxy is defined) | ternary( #configure_katello_proxy | urlsplit('scheme')) + '://' + configure_katello_proxy_username + ':' + configure_katello_proxy_password + '@' #+ configure_katello_proxy | urlsplit('hostname')) + ':' + #(configure_katello_proxy | rlsplit('port') | string), '') }}"
+- name: create manifest, attach subs and download from RHSM
+  import_tasks: "{{ role_path }}/tasks/rhsm_manifest.yml"
 
-# TODO: need to test the Attach subs and Download manifest task
-#- name: manifest | Download manifest
-#  redhat_manifest:
-#    name: "{{ item.0.manifest }}"
-#    username: "{{ configure_rhsm_username }}"
-#    password: "{{ configure_rhsm_password }}"
-#    validate_certs: "{{ configure_rhsm_verify_ssl }}"
-#    path: "{{ configure_katello_manifest_path}}/{{ item.0.manifest }}.zip"
-#  with_subelements:
-#    - "{{ configure_katello_organizations }}"
-#    - pool
-#  when:
-#    - item.0.manifest is defined and configure_katello_download_manifest
-#    - not configure_katello_copy_manifest
-#  environment:
-#    http_proxy: "{{ (configure_katello_proxy is defined) | ternary( ##configure_katello_proxy | urlsplit('scheme')) + '://' + #configure_katello_proxy_username + ':' + configure_katello_proxy_password + '@' ##+ configure_katello_proxy | urlsplit('hostname')) + ':' + ##(configure_katello_proxy | rlsplit('port') | string), '') }}"
-#    https_proxy: "{{ (configure_katello_proxy is defined) | ternary( ##configure_katello_proxy | urlsplit('scheme')) + '://' + #configure_katello_proxy_username + ':' + configure_katello_proxy_password + '@' ##+ configure_katello_proxy | urlsplit('hostname')) + ':' + ##(configure_katello_proxy | rlsplit('port') | string), '') }}"
-#
 - name: manifest | Copy manifest
   copy:
-    src: "{{ configure_katello_manifest_path }}/{{ item.0.manifest }}.zip"
-    dest: "/root/{{ item.0.manifest }}.zip"
+    src: "{{ configure_katello_manifest_path }}/{{ item.manifest }}.zip"
+    dest: "/root/{{ item.manifest }}.zip"
     mode: 0644
   register: manifest
-  with_subelements:
-    - "{{ configure_katello_organizations }}"
-    - pool
-  when:
-    - subs.changed or configure_katello_force_manifest_upload
-    - configure_katello_organizations is defined
-    - not( (item.0.manifest is none ) or (item.0.manifest | trim == '') )
-    - item.0.state == "present"
+  with_items: "{{ configure_katello_organizations }}"
+  loop_control: 
+    label: "{{ item.manifest }}"
+  when: 
     - configure_katello_copy_manifest
+#    - not( (item.manifest is none ) or (item.manifest | trim == '') )
+#    - item.state == "present"
 
 - name: "manifest | Upload Katello manifests"
   katello_manifest:
@@ -59,15 +22,14 @@
     password: "{{ configure_katello_password }}"
     server_url: "{{ configure_katello_server_url }}"
     verify_ssl: "{{ configure_katello_verify_ssl }}"
-    organization: "{{ item.0.name }}"
-    manifest_path: "/root/{{ item.0.manifest }}.zip"
-    redhat_repository_url: "{{ item.0.manifest_url | default(omit) }}"
+    organization: "{{ item.name }}"
+    manifest_path: "/root/{{ item.manifest }}.zip"
+    redhat_repository_url: "{{ item.manifest_url | default(omit) }}"
     state: present
-  with_subelements:
-    - "{{ configure_katello_organizations }}"
-    - pool
+  with_items: "{{ configure_katello_organizations }}"
+  loop_control: 
+    label: "{{ item.manifest }}"
   when:
-    - subs.changed or manifest.changed or configure_katello_force_manifest_upload
-    - configure_katello_organizations is defined
-    - not( (item.0.manifest is none ) or (item.0.manifest | trim == '') )
-    - item.0.state == "present"
+    - manifest.changed or upload_manifest or configure_katello_force_manifest_upload
+#    - not( (item.manifest is none ) or (item.manifest | trim == '') )
+#    - item.state == "present"

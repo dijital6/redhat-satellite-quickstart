@@ -57,6 +57,7 @@ configure_katello_organizations:
         state: present
     products: "{{ rhel }} + {{ ansible }}" #refer to ../vars/satellite_content_views.yml
     content_views: "{{ rhel_cv }} + {{ ansible_cv }}"         #refer to ../vars/satellite_products.yml
+    activation_keys: "{{ katello_activation_keys }}"
     sync_plans:
       - name: Red Hat Sync Plan
         date: "2017-01-01 00:00:00"

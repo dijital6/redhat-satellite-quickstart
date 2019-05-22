@@ -11,6 +11,10 @@
   include_vars: "../vars/satellite_products.yml"
   tags: [always]
 
+- name: include content view variables
+  include_vars: "../defaults/activation_keys.yml"
+  tags: [always]
+
 - name: setup epel repo, install python-pip and install nailgun pip
   import_tasks: "{{ role_path }}/tasks/install.yml"
   when: configure_katello_nailgun_install
@@ -36,12 +40,9 @@
   import_tasks: "{{ role_path }}/tasks/content_views.yml"
   tags: [katello,cv]
 
-#- import_tasks: "{{ role_path }}/tasks/activation_keys.yml"
-#  tags:
-#    - activation_keys
-#    - activation_key
-#    - aks
-#    - ak
+- name: create activation keys
+  import_tasks: "{{ role_path }}/tasks/activation_keys.yml"
+  tags: [katello,ak]
 
 #*******************************************#
 # ABOVE THIS LINE WORKS                     #

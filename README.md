@@ -1,6 +1,8 @@
 ansible-role-configure-katello
 ===============================
 
+:warning: Work in progress.
+
 This role configures your Satellite:
 
  - Create organizations
@@ -10,6 +12,8 @@ This role configures your Satellite:
  - Create contentveiws
  - Enables products
  - Create life cycle environments
+
+It's base on work I started here [my-satellite-post-config](https://github.com/flyemsafe/my-satellite-post-config)
 
 
 Requirements

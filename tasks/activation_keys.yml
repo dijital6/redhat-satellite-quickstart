@@ -1,34 +1,22 @@
 ---
-#- name: Create Activation Keys
-#  katello_activation_key:
-#    username: "{{ configure_katello_username }}"
-#    password: "{{ configure_katello_password }}"
-#    server_url: "{{ configure_katello_server_url }}"
-#    verify_ssl: "{{ configure_katello_verify_ssl }}"
-#    name: "{{ item.activation_key }}"
-#    organization: "{{ item.0.name }}"
-#    lifecycle_environment: "{{ item.1.activation_keys.0.lifecycle_environment }}"
-#    content_view: "{{ item.1.activation_keys.0.content_view }}"
-#    subscriptions: "{{ item.1.activation_keys.0.subscriptions }}"
-#    auto_attach: "{{ item.1.activation_keys.0.auto_attach | default(omit) }}"
-#  with_subelements:
-#    - "{{ configure_katello_organizations }}"
-#    - content_views
-#  when: 
-#    - item.0.state == "present"
-#    - item.1.name is defined
-#    - configure_katello_content_views is defined
-#    - item.activation_key is defined
-#    - configure_katello_activation_keys is defined
 
-
-- name: Testing yaml dict, list, references
-  debug:
-    msg: "{{ item.1.reposet }}"
-    #msg: "ORG={{ item.0.name }} reposet={{ item.1.reposet_name }} product={{ .1.product }} repositories={{ item.1.repositories }} repo={{ .1.repo_name }} state={{ item.1.state }}"
+#TODO: module cannot find subscription
+- name: Create Activation Keys
+  katello_activation_key:
+    username: "{{ configure_katello_username }}"
+    password: "{{ configure_katello_password }}"
+    server_url: "{{ configure_katello_server_url }}"
+    verify_ssl: "{{ configure_katello_verify_ssl }}"
+    name: "{{ item.1.name }}"
+    organization: "{{ item.0.name }}"
+    lifecycle_environment: "{{ item.1.lifecycle_environment }}"
+    content_view: "{{ item.1.content_view }}"
+    subscriptions: "{{ item.1.subscriptions }}"
+    auto_attach: "{{ item.1.auto_attach | default(omit) }}"
   with_subelements:
     - "{{ configure_katello_organizations }}"
-    - products
-  when:
-    #- item.1.product is defined
-    #- item.1.reposet_name.repo_name is defined
+    - activation_keys
+  loop_control:
+    label: "{{ item.1.name }}"
+  tags: [always,ak]
+  ignore_errors: yes

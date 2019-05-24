@@ -30,8 +30,11 @@ configure_katello_sync_plans: true
 run_katello_sync: false
 
 # product variables
+
+# This only applies to RHEL 7 and 6
 rhel_major: 7
 rhel_minor: 6
+
 ansible_major: 2
 ceph_major: 3
 rhv_major: 4
@@ -55,7 +58,7 @@ configure_katello_organizations:
     location:
       - name: Orlando
         state: present
-    products: "{{ rhel }} + {{ ansible }}" #refer to ../vars/satellite_content_views.yml
+    products: "{{ rhel8 }}" #refer to ../vars/satellite_content_views.yml
     content_views: "{{ rhel_cv }} + {{ ansible_cv }}"         #refer to ../vars/satellite_products.yml
     activation_keys: "{{ katello_activation_keys }}"
     sync_plans:
@@ -70,3 +73,40 @@ configure_katello_organizations:
 # Content views
 rhel_cv_name: "cv-os-rhel{{ rhel_major }}"
 ansible_cv_name: "cv-app-ansible"
+
+# Subnets
+
+subnets:
+  - name: ""     # required
+    network: ""  # network
+    mask: ""
+    gateway: ""
+    from_ip: ""
+    to_ip: ""
+    boot_mode: ""  #DHCP, Static
+    dns1: ""
+    dns2: ""
+    dhcp_proxy: ""
+    tftp_proxy: ""
+    dns_proxy: ""
+    remote_exec_proxy: ""
+    vlanid: ""
+    mtu: ""
+    ipam: ""   #DHCP, Internal DB
+    domains:
+    - "foo.example.com"
+    - "bar.example.com"
+    organizations:
+    - "Example Org"
+    locations:
+    - "Toulouse"
+    state: present  
+
+domains:
+  - name: ""  #required
+    desc: ""
+    proxy: ""
+    locations:
+    orgs:
+    state:
+   

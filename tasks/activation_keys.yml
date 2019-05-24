@@ -18,5 +18,5 @@
     - activation_keys
   loop_control:
     label: "{{ item.1.name }}"
-  tags: [always,ak]
+  tags: [ak]
   ignore_errors: yes

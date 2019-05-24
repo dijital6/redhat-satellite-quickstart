@@ -7,6 +7,21 @@ ansible:
     repositories:
       - basearch: "{{ arch }}"
 
+rhel8:
+  - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs)"
+    label: rhel-8-for-x86_64-baseos-rpms
+    state: enabled
+    repositories:
+      - releasever: "8"
+        basearch: "{{ arch }}"
+  - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)"
+    label: rhel-8-for-x86_64-appstream-rpms
+    state: enabled
+    repositories:
+      - releasever: "8"
+        basearch: "{{ arch }}"
+
+# This will setup a RHEL 7 or 6 product repositories. RHEL introduce significant repositoriy changes.
 rhel:
   - reposet: "Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)"
     product: &product_rhel Red Hat Enterprise Linux Server

@@ -44,6 +44,14 @@
   import_tasks: "{{ role_path }}/tasks/activation_keys.yml"
   tags: [katello,ak]
 
+- name: create/update domains
+  import_tasks: "{{ role_path }}/tasks/domains.yml"
+  tags: [foreman,domains]
+
+- name: create/update subnets
+  import_tasks: "{{ role_path }}/tasks/subnets.yml"
+  tags: [foreman,subnets]
+  
 #*******************************************#
 # ABOVE THIS LINE WORKS                     #
 #############################################
@@ -59,9 +67,3 @@
 #    - lifecycle_environments
 #    - lenv
 #    - lenvs
-
-
-# - import_tasks: "{{ role_path }}/tasks/domains.yml"
-#   tags:
-#     - domain
-#     - domains

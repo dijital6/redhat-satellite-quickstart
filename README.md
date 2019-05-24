@@ -15,6 +15,20 @@ This role configures your Satellite:
 
 It's base on work I started here [my-satellite-post-config](https://github.com/flyemsafe/my-satellite-post-config)
 
+A goal of this role is quickly setup Satellite for Day-2 operations leveraging the foreman-ansible-modules. This role will model the [10 Steps to Build an SOE: How Red Hat Satellite 6 Supports Setting up a Standard Operating Environment](https://access.redhat.com/articles/1585273).
+
+Products and Content Views
+--------------------------
+
+- vars/satellite_products.yml: This will define all the Red Hat products and repos.
+- vars/satellite_content_views.yml: This defines all the Content and Composite views.
+
+**Products**
+
+- ansible
+- rhel8
+- rhel(7,6)
+
 
 Requirements
 ------------

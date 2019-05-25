@@ -109,4 +109,21 @@ domains:
     locations:
     orgs:
     state:
-   
+ 
+compute_resource:
+  - name: ""     #required
+    desc: ""
+    provider: ""   #vmware,libvirt,ovirt
+    provider_url: ""
+    provider_user: ""
+    provider_pass: ""
+    datacenter: ""
+    ovirt_quota: ""
+    ovirt_v4_api: ""   #true/false
+    console_pass: ""   #true/false
+    display_type: ""   #VNC, SPICE
+    locations:
+      - "Orlando"
+    orgs:
+      - "ACME"
+    state: present

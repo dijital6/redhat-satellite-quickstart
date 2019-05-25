@@ -3,15 +3,11 @@
   include_vars: "../vars/satellite_content_views.yml"
   tags: [always]
 
-- name: include satellite content views variables
-  include_vars: "../vars/satellite_content_views.yml"
-  tags: [always]
-
 - name: include satellite products variables
   include_vars: "../vars/satellite_products.yml"
   tags: [always]
 
-- name: include content view variables
+- name: include satellite activation keys
   include_vars: "../defaults/activation_keys.yml"
   tags: [always]
 
@@ -29,29 +25,17 @@
   tags: [katello,manifest]
 
 - name: enable red hat products repos and repositories
-  import_tasks: "{{ role_path }}/tasks/redhat_products.yml"
-  tags: [katello,repos,products]
+  import_tasks: "{{ role_path }}/tasks/products.yml"
+  tags: [katello,repos,products,sync_plans]
 
-- name: create sync plans
-  import_tasks: "{{ role_path }}/tasks/sync_plans.yml"
-  tags: [katello,sync_plans]
-
-- name: create content views
-  import_tasks: "{{ role_path }}/tasks/content_views.yml"
-  tags: [katello,cv]
-
-- name: create activation keys
-  import_tasks: "{{ role_path }}/tasks/activation_keys.yml"
-  tags: [katello,ak]
+- name: create/update satellite content
+  import_tasks: "{{ role_path }}/tasks/content.yml"
+  tags: [katello,cv,lcenv]
 
 - name: create/update domains
-  import_tasks: "{{ role_path }}/tasks/domains.yml"
-  tags: [foreman,domains]
+  import_tasks: "{{ role_path }}/tasks/provision.yml"
+  tags: [provision,domains,subnets,compute]
 
-- name: create/update subnets
-  import_tasks: "{{ role_path }}/tasks/subnets.yml"
-  tags: [foreman,subnets]
-  
 #*******************************************#
 # ABOVE THIS LINE WORKS                     #
 #############################################
@@ -61,9 +45,3 @@
 #    -  settings
 #    - repository
 
-
-#- import_tasks: "{{ role_path }}/tasks/lifecycle_environments.yml"
-#  tags:
-#    - lifecycle_environments
-#    - lenv
-#    - lenvs

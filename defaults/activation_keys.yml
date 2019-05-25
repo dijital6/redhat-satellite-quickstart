@@ -1,0 +1,10 @@
+katello_activation_keys:
+  - name: "act-os-rhel-7Server"
+    lifecycle_environment: "Library"
+    content_view: 'cv-os-rhel7'
+    subscriptions:
+      - name: "Red Hat Enterprise Linux Server, Standard (1 Virtual Node)"
+    content_overrides:
+      - label: rhel-7-server-optional-rpms
+        override: enabled
+    auto_attach: False

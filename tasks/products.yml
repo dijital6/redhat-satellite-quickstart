@@ -1,4 +1,32 @@
 ---
+- name: "Enable repository sets"
+  katello_repository_set:
+    username: "{{ configure_katello_username }}"
+    password: "{{ configure_katello_password }}"
+    server_url: "{{ configure_katello_server_url }}"
+    verify_ssl: "{{ configure_katello_verify_ssl }}"
+#    name: "{{  item.1.reposet }}"
+    organization: "{{ item.0.name }}"
+#    product: "{{ item.1.product }}"a
+    label: "{{ item.1.label }}"
+    repositories: "{{ item.1.repositories }}"
+    state: "{{ item.1.state }}"
+  with_subelements:
+    - "{{ configure_katello_organizations }}"
+    - products
+  loop_control:
+    label: "{{ item.1.name }}"
+  when:
+    - item.0.state == "present"
+#    - item.1.product is defined
+#  notify:
+#    - sync all repositories
+  register: enable_repo_results
+  tags: [products]
+
+#- name: Sync Repositories
+#  meta: flush_handlers
+
 - name: Create Sync Plans
   katello_sync_plan:
     username: "{{ configure_katello_username }}"

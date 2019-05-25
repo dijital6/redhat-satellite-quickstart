@@ -1,13 +1,23 @@
 ---
+- name: create/update lifecycle environments
+  katello_lifecycle_environment:
+    username: "{{ configure_katello_username }}"
+    password: "{{ configure_katello_password }}"
+    server_url: "{{ configure_katello_server_url }}"
+    verify_ssl: "{{ configure_katello_verify_ssl }}"
+    description: "{{ item.desc | default('') }}"
+    label: "{{ item.name }}"
+    name: "{{ item.name }}"
+    organization: "{{ item.org }}"
+    prior: "{{ item.prior }}"
+    state: "{{ item.state | default(omit) }}"
+  with_items: "{{ lifecycle_environments }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: lifecycle_environments is defined
+  tags: [katello,lcenv]
 
-#- name: Show content views
-#  debug:
-#    msg: "{{ item.1.state }}"
-#  with_subelements:
-#    - "{{ configure_katello_organizations }}"
-#    - content_views
-
-- name: Create Content Views
+- name: create/update Content Views
   katello_content_view:
     username: "{{ configure_katello_username }}"
     password: "{{ configure_katello_password }}"
@@ -43,7 +53,7 @@
 #  when: created_content_view.changed
 
 # TODO: refactor and test the below code
-#- name: Create Content View Filters
+#- name: create/update Content View Filters
 #  katello_content_view_filter:
 #    username: "{{ configure_katello_username }}"
 #    password: "{{ configure_katello_password }}"
@@ -68,7 +78,7 @@
 #  with_items: "{{ configure_katello_content_view_filters }}"
 #  when: configure_katello_content_view_filters is defined
 #
-#- name: Create Content View Versions
+#- name: create/update Content View Versions
 #  katello_content_view_version:
 #    username: "{{ configure_katello_username }}"
 #    password: "{{ configure_katello_password }}"
@@ -86,3 +96,25 @@
 #  with_items: "{{ configure_katello_content_view_versions }}"
 #  when: configure_katello_content_view_versions is defined
 #
+
+#TODO: module cannot find subscription
+- name: create/update Activation Keys
+  katello_activation_key:
+    username: "{{ configure_katello_username }}"
+    password: "{{ configure_katello_password }}"
+    server_url: "{{ configure_katello_server_url }}"
+    verify_ssl: "{{ configure_katello_verify_ssl }}"
+    name: "{{ item.1.name }}"
+    organization: "{{ item.0.name }}"
+    lifecycle_environment: "{{ item.1.lifecycle_environment }}"
+    content_view: "{{ item.1.content_view }}"
+    subscriptions: "{{ item.1.subscriptions }}"
+    auto_attach: "{{ item.1.auto_attach | default(omit) }}"
+  with_subelements:
+    - "{{ configure_katello_organizations }}"
+    - activation_keys
+  loop_control:
+    label: "{{ item.1.name }}"
+  tags: [ak]
+  ignore_errors: yes
+

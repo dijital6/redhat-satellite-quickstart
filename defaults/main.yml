@@ -109,4 +109,11 @@ domains:
     locations:
     orgs:
     state:
-   
+  
+compute_resource:
+  - name: ""     #required
+    descr: ""
+    locations: ""
+    orgs: ""
+    provider: ""   #vmware,libvirt,ovirt
+    state: 

@@ -1,10 +1,10 @@
 ---
 - name: Kick off sync
   katello_sync:
-    username: "{{ configure_katello_username }}"
-    password: "{{ configure_katello_password }}"
-    server_url: "{{ configure_katello_server_url }}"
-    verify_ssl: "{{ configure_katello_verify_ssl }}"
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
     repository: "{{ item.repo_name }}"
     product: "{{ item.product }}"
     organization: "{{ item.organization }}"

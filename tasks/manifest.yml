@@ -1,35 +1,57 @@
 ---
-- name: create manifest, attach subs and download from RHSM
-  import_tasks: "{{ role_path }}/tasks/rhsm_manifest.yml"
+#TODO: this currently on works on adding one pool to the manifest, this should be able to handle
+#      multiple pools
+- name: delete or create a subscription allocations with subscriptions and download the manifest
+  redhat_manifest:
+    name: "{{ item.0.manifest }}"
+    username: "{{ rhsm_user }}"
+    password: "{{ rhsm_password }}"
+    pool_id: "{{ item.1.id }}"
+    quantity: "{{ item.1.quantity }}"
+    path: "{{ manifest_download_path }}/{{ item.0.manifest }}.zip"
+    state: "{{ item.0.manifest_state }}"
+    pool_state: "{{ item.1.pool_state }}"
+    validate_certs: "{{ rhsm_verify_ssl }}"
+  with_subelements:
+    - "{{ satellite_orgs }}"
+    - pool
+  loop_control:
+    label: "{{ item.0.manifest }}"
+  when:
+    - not( (item.1.id is none ) or (item.1.id | trim == '') )
+    - item.0.create_manifest
+    - not item.0.use_local_manifest
+  register: rhsm_manifest
+  tags: manifest
 
-- name: manifest | Copy manifest
+- name: copy local manifest to satellite
   copy:
-    src: "{{ configure_katello_manifest_path }}/{{ item.manifest }}.zip"
-    dest: "/root/{{ item.manifest }}.zip"
+    src: "{{ local_manifest_path }}/{{ item.manifest }}.zip"
+    dest: "{{ manifest_download_path }}/{{ item.manifest }}.zip"
     mode: 0644
-  register: manifest
-  with_items: "{{ configure_katello_organizations }}"
+  register: copy_rhsm_manifest
+  with_items: "{{ satellite_orgs }}"
   loop_control: 
     label: "{{ item.manifest }}"
   when: 
-    - configure_katello_copy_manifest
-#    - not( (item.manifest is none ) or (item.manifest | trim == '') )
-#    - item.state == "present"
+    - item.use_local_manifest
+    - not( (item.manifest is none ) or (item.manifest | trim == '') )
+  tags: manifest
 
-- name: "manifest | Upload Katello manifests"
+- name: attach manifest to Satellite org
   katello_manifest:
-    username: "{{ configure_katello_username }}"
-    password: "{{ configure_katello_password }}"
-    server_url: "{{ configure_katello_server_url }}"
-    verify_ssl: "{{ configure_katello_verify_ssl }}"
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
     organization: "{{ item.name }}"
-    manifest_path: "/root/{{ item.manifest }}.zip"
+    manifest_path: "{{ manifest_download_path }}/{{ item.manifest }}.zip"
     redhat_repository_url: "{{ item.cdn_url | default(omit) }}"
     state: present
-  with_items: "{{ configure_katello_organizations }}"
+  with_items: "{{ satellite_orgs }}"
   loop_control: 
     label: "{{ item.manifest }}"
   when:
-    - manifest.changed or upload_manifest or configure_katello_force_manifest_upload
-#    - not( (item.manifest is none ) or (item.manifest | trim == '') )
-#    - item.state == "present"
+    - rhsm_manifest.changed or copy_rhsm_manifest.changed or force_manifest_upload
+    - not( (item.manifest is none ) or (item.manifest | trim == '') )
+  tags: manifest

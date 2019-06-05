@@ -1,27 +1,27 @@
 ---
 - name: taxonomies | create Organizations
   foreman_organization:
-    username: "{{ configure_katello_username }}"
-    password: "{{ configure_katello_password }}"
-    server_url: "{{ configure_katello_server_url }}"
-    verify_ssl: "{{ configure_katello_verify_ssl }}"
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
     name: "{{ item.name }}"
     state: "{{ item.state }}"
-  with_items: "{{ configure_katello_organizations }}"
+  with_items: "{{ satellite_orgs }}"
   loop_control:
     label: "{{ item.name }}"
 
 - name: taxonomies | create locations
   foreman_location:
-    username: "{{ configure_katello_username }}"
-    password: "{{ configure_katello_password }}"
-    server_url: "{{ configure_katello_server_url }}"
-    verify_ssl: "{{ configure_katello_verify_ssl }}"
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
     name: "{{ item.1.name }}"
     state: "{{ item.1.state }}"
     organizations: "{{ item.0.name }}"
   with_subelements:
-    - "{{ configure_katello_organizations }}"
+    - "{{ satellite_orgs }}"
     - location
   loop_control:
     label: "{{ item.1.name }}"

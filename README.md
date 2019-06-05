@@ -56,14 +56,68 @@ sudo yum install python-six pytz python-netaddr
 
 Role Variables
 --------------
-
-See defaults/main.yml file 
+**Variable**|**Required**|**Default**|**Description**
+-----|-----|-----|-----
+rhsm_username|:x:|null|RHSM user name with priv to create manifest and attach subs on acces.redhat.com
+rhsm_password|:x:|null|RHSM password
+manifest_download_path|:heavy_check_mark: |/root|path on Satellite where manifest will be stored
+rhsm_verify_ssl|:x:|false|"default is to use basic auth
+satellite_orgs|:heavy_check_mark: |see ```defaults/main.yml```|dictionary describing your satellite configuration details
+local_manifest_path|:heavy_check_mark: |null|where on the controll node to find manifest to copy to Satellite
+satellite_admin_user|:heavy_check_mark: |null|satellite admin user
+satellite_user_pass|:heavy_check_mark: |null|satellite admin password
+satellite_url|:heavy_check_mark: |null|satellite server url https://satellite.com
+satellite_verify_ssl|:x:|no|"default is to use basic auth
+force_manifest_upload|:x:|false|force the upload of a manifest to Satellite
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: sean797.configure_katello }
+```
+- name: PLAY| create a organization and location, create RHSM manifest and add it to Satellite
+  hosts: sat01
+  remote_user: root
+  become: false
+  gather_facts: true
+  vars:
+    satellite_admin_user: "{{ satellite_user }}"
+    satellite_user_pass: "{{ satellite_pass }}"
+    satellite_url: "https://{{ satellite_hostname }}.{{ satellite_domain }}"
+    satellite_verify_ssl: no
+    force_manifest_upload: false
+    rhsm_password: "{{ vault_rhsm_pass }}"
+    rhsm_user: "{{ vault_rhsm_user }}"
+    manifest_download_path: /root
+    local_manifest_path: ~/files/satellite_manifest
+    satellite_orgs:
+      - name: FedSI
+        state: present
+        manifest: FedSISatelliteManifest
+        manifest_state: present
+        create_manifest: true
+        use_local_manifest: false
+        cdn_url: https://cdn.redhat.com
+        pool:
+          - id: 8a85f99b6977b7c0016979464ee772cb
+            pool_state: present
+            quantity: 7
+        location:
+          - name: Tysons
+            state: present
+        products: ""
+        content_views: ""
+        activation_keys: ""
+        sync_plans:
+          - name: ""
+            date: ""
+            interval: ""
+            enabled: ""
+            products:
+              - name: ""
+              - name: ""
+  tasks:
+  - name: TASK| runnning ansible-role-configure-katello
+    include_role:
+      name: ansible-role-configure-katello
+    tags: [always,manifest]
+```

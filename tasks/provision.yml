@@ -1,10 +1,10 @@
 ---
 - name: Create Domains
   foreman_domain:
-    username: "{{ configure_katello_username }}"
-    password: "{{ configure_katello_password }}"
-    server_url: "{{ configure_katello_server_url }}"
-    verify_ssl: "{{ configure_katello_verify_ssl }}"
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
     name: "{{ item.name }}"
     organizations: "{{ item.orgs | default(omit) }}"
     locations: "{{ item.locations | default(omit) }}"
@@ -18,10 +18,10 @@
 
 - name: creating subnets
   foreman_subnet:
-    username: "{{ configure_katello_username }}"
-    password: "{{ configure_katello_password }}"
-    server_url: "{{ configure_katello_server_url }}"
-    verify_ssl: "{{ configure_katello_verify_ssl }}"
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
     name: "{{ item.name }}"
     network: "{{ item.network }}"
     network_type: "{{ item.network_type | default(omit) }}"
@@ -50,10 +50,10 @@
 
 - name: create/update compute resource
   foreman_compute_resource:
-    username: "{{ configure_katello_username }}"
-    password: "{{ configure_katello_password }}"
-    server_url: "{{ configure_katello_server_url }}"
-    verify_ssl: "{{ configure_katello_verify_ssl }}"
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
     name: "{{ item.name }}"
     organizations: "{{ item.orgs | default(omit) }}"
     locations: "{{ item.locations | default(omit) }}"

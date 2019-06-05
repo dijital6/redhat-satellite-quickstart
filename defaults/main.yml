@@ -9,17 +9,18 @@ configure_katello_nailgun_package: "git+https://github.com/SatelliteQE/nailgun.g
 configure_katello_nailgun_install: true
 
 # Satellite server credentials
-configure_katello_username: admin
-configure_katello_password: "{{ vault_katello_admin_password | default('changeme') }}"
-configure_katello_server_url: "https://{{ inventory_hostname }}"
-configure_katello_verify_ssl: false
+satellite_admin_user: admin
+satellite_user_pass: "{{ vault_katello_admin_password | default('changeme') }}"
+satellite_url: "https://{{ inventory_hostname }}"
+satellite_verify_ssl: false
 
 # Satellite manifest
-configure_katello_copy_manifest: true
-configure_katello_force_manifest_upload: false
-configure_katello_manifest_path: ""
-configure_katello_create_manifest: false
-configure_katello_download_manifest: false
+configure_katello_copy_manifest: false          # set to true to use an already downloaded manifest
+force_manifest_upload: false # set to true to always upload manifest
+local_manifest_path: ""            # set path to dump downloaded manifest
+configure_katello_create_manifest: false       # set to true to create Subscriptin Allocation vis RHSM
+configure_katello_download_manifest: false     # set to true to download manifest from RHSM
+rhsm_verify_ssl: false               # the default false works
 
 # Configure satellite to use a proxy
 configure_katello_proxy: false
@@ -46,7 +47,7 @@ arch: x86_64
 satellite_version: 6.5
 
 # setup satellite org, location with with products
-configure_katello_organizations:
+satellite_orgs:
   - name: ACME
     state: present
     manifest: Satellite_All_Latest
@@ -127,4 +128,3 @@ compute_resource:
     orgs:
       - "ACME"
     state: present
->>>>>>> newstructure

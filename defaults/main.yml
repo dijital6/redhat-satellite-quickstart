@@ -15,11 +15,8 @@ satellite_url: "https://{{ inventory_hostname }}"
 satellite_verify_ssl: false
 
 # Satellite manifest
-configure_katello_copy_manifest: false          # set to true to use an already downloaded manifest
 force_manifest_upload: false # set to true to always upload manifest
 local_manifest_path: ""            # set path to dump downloaded manifest
-configure_katello_create_manifest: false       # set to true to create Subscriptin Allocation vis RHSM
-configure_katello_download_manifest: false     # set to true to download manifest from RHSM
 rhsm_verify_ssl: false               # the default false works
 
 # Configure satellite to use a proxy
@@ -46,6 +43,11 @@ osp_major: 14
 arch: x86_64
 satellite_version: 6.5
 
+# Promoting content views default values
+cv_default_ver: 1.0
+cv_default_lc: Library
+
+
 # setup satellite org, location with with products
 satellite_orgs:
   - name: ACME
@@ -54,22 +56,25 @@ satellite_orgs:
     cdn_url: https://cdn.redhat.com
     pool:   # this is required for attaching subs to a manifest on RHSM
       - id: 999
-        state: present
+        pool_state: present
         quantity: 9
     location:
       - name: Orlando
         state: present
-    products: "{{ rhel8 }}" #refer to ../vars/satellite_content_views.yml
-    content_views: "{{ rhel_cv }} + {{ ansible_cv }}"         #refer to ../vars/satellite_products.yml
-    activation_keys: "{{ katello_activation_keys }}"
+    products:
+      - rhel7
+    lifecycle_environments:
+      - Library
+      - Dev
+      - QA
+      - Production
     sync_plans:
-      - name: Red Hat Sync Plan
-        date: "2017-01-01 00:00:00"
+      - name: "Red Hat Sync Plan"
+        date: "2019/06/16 00:00:00 +0000"
         interval: daily
         enabled: true
-        products:
-          - name: Red Hat Enterprise Linux Server
-          - name: Red Hat Ansible Engine
+        description: "Sync Plan for Red Hat products"
+
 
 # Content views
 rhel_cv_name: "cv-os-rhel{{ rhel_major }}"

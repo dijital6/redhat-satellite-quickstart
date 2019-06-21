@@ -10,6 +10,7 @@
   with_items: "{{ satellite_orgs }}"
   loop_control:
     label: "{{ item.name }}"
+  tags: [katello,org]
 
 - name: taxonomies | create locations
   foreman_location:
@@ -25,3 +26,4 @@
     - location
   loop_control:
     label: "{{ item.1.name }}"
+  tags: [katello,location]

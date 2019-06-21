@@ -1,5 +1,5 @@
 ---
-rhel_cv:
+rhel7_cv:
   - name: "{{ rhel_cv_name }}"
     state: present
     product: &cv_product_rhel Red Hat Enterprise Linux Server

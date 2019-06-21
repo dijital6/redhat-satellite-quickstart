@@ -39,7 +39,9 @@ Requires:
 3. Packages: python-pip, python-six, pytz, python-netaddr
 4. EPEL: provides python-pip on RHEL 7
 
-Items 2-4 can be setup by setting the variable `configure_katello_nailgun_install` to true.
+Items 2-4 can be setup by setting the variable `configure_katello_nailgun_install`to true.
+
+This was tested using the 
 
 **Nailgun install manual steps on RHEL 7**
 
@@ -50,9 +52,11 @@ sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noa
 sudo yum-config-manager --disable epel
 sudo yum install python2-pip --enablerepo="epel"
 sudo pip install git+https://github.com/SatelliteQE/nailgun.git@master#egg=nailgun
+#sudo pip install apypie
 sudo yum install python-six pytz python-netaddr
 ```
 
+Note: This role was developed using the nailgun branch of the foreman-ansible-modules make sure you checkout this branch.
 
 Role Variables
 --------------
@@ -72,6 +76,15 @@ force_manifest_upload|:x:|false|force the upload of a manifest to Satellite
 
 Example Playbook
 ----------------
+
+**Create your first ORG and upload a manifest**
+
+How to find your subscription pool:
+
+1. https://access.redhat.com/management/products
+2. Click on your product
+3. Select the subscriptions Tab next to Overview
+4. Select the subscription number
 
 ```
 - name: PLAY| create a organization and location, create RHSM manifest and add it to Satellite

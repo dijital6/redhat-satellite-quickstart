@@ -1,50 +1,93 @@
 ---
-- name: "Enable repository sets"
+- name: enable rhel product repository sets
   katello_repository_set:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
     verify_ssl: "{{ satellite_verify_ssl }}"
-    organization: "{{ item.0.name }}"
-    label: "{{ item.1.label }}"
-    repositories: "{{ item.1.repositories }}"
-    state: "{{ item.1.state }}"
-  with_subelements:
-    - "{{ satellite_orgs }}"
-    - products
+    organization: "{{ orgs.0.name }}"
+    label: "{{ item.label }}"
+    repositories: "{{ item.repositories }}"
+    state: "{{ item.state }}"
+  loop: "{{ lookup('vars', orgs.1 + '_product' | default([])) }}"
   loop_control:
-    label: "{{ item.1.name }}"
-  when:
-    - item.0.state == "present"
+    label: "{{ item.label }}"
+  when: lookup('vars', orgs.1 + '_product')
   register: enable_repo_results
-  tags: [products]
+  tags: [katello,products]
 
-#- name: Sync Repositories
-#  meta: flush_handlers
+#TODO: when state does not stop it from processing a product that does not exist
+#      add a task that validates that the products the user is requesting does exist
+#      if a product does not exist fail the play and ask user to fix. Or run the play, then
+#      informed the user that the products where skipped because they do not exist.
 
-- name: Create Sync Plans
-  katello_sync_plan:
+- name: create/update Content Views
+  katello_content_view:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
     verify_ssl: "{{ satellite_verify_ssl }}"
-    name: "{{ item.1.name }}"
-    organization: "{{ item.0.name }}"
-    interval: "{{ item.1.interval }}"
-    enabled: "{{ item.1.enabled }}"
-    sync_date: "{{ item.1.date }}"
-    products: "{{ item.1.products }}"
-  with_subelements:
-    - "{{ satellite_orgs }}"
-    - sync_plans
+    name: "{{ item.name }}"
+    organization: "{{ orgs.0.name }}"
+    repositories: "{{ item.repos | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
+  loop: "{{ lookup('vars', orgs.1 + '_cv' | default([])) }}"
   loop_control:
-    label: "{{ item.1.products }}"
-  when: configure_katello_sync_plans
-  tags: [sync_plans]
-  ignore_errors: yes
+    label: "{{ item.name }}"
+  when: lookup('vars', orgs.1 + '_cv')
+  register: created_content_view
+  tags: [katello,cv]
 
-- debug:
-    msg: | 
-      Currently the sync plan is created but it does not add products 
-      to the sync plan it creates. This why we are ingore_errors for katello_sync_plan.
-      Issue #273 as been raised with foreman-ansible-modules.
+- name: publish content view to library
+  katello_content_view_version:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    content_view: "{{ item.name }}"
+    organization: "{{ orgs.0.name }}"
+    version: "{{ cv_default_ver }}"
+    lifecycle_environments:
+      - "{{ cv_default_lc }}"
+  loop: "{{ lookup('vars', orgs.1 + '_cv' | default([])) }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: lookup('vars', orgs.1 + '_cv')
+  tags: [katello,cv,promote]
+
+- name: "ensure version one of the content view is in all specified lifecyle environments"
+  katello_content_view_version:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    content_view: "{{ item.name }}"
+    organization: "{{ orgs.0.name }}"
+    version: "{{ cv_default_ver }}"
+    lifecycle_environments: "{{ orgs.0.lifecycle_environments }}"
+  loop: "{{ lookup('vars', orgs.1 + '_cv' | default([])) }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: lookup('vars', orgs.1 + '_cv')
+  tags: [katello,cv,promote]
+
+#TODO:
+# Let user specefiy which lifecycle environemtns they want to have activation keys for
+# Default should be to create AK for all LC
+- name: create/update Activation Keys
+  katello_activation_key:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    name: "{{ item.name }}"
+    organization: "{{ orgs.0.name }}"
+    lifecycle_environment: "{{ item.lifecycle_environment }}"
+    content_view: "{{ item.content_view }}"
+    subscriptions: "{{ item.subscriptions }}"
+    auto_attach: "{{ item.auto_attach | default(omit) }}"
+  loop: "{{ lookup('vars', orgs.1 + '_ak' | default([])) }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: lookup('vars', orgs.1 + '_ak')
+  tags: [katello,cv,promote,ak]

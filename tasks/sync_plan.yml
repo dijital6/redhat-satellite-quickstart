@@ -1,0 +1,35 @@
+---
+- name: build list of all products
+  set_fact:
+    sync_plan_products: "{{ sync_plan_products }} + [ '{{ item.product }}' ]"
+  loop: "{{ satellite_orgs.0.products }}"
+  loop_control:
+    label: "{{ item.product }}"
+  tags: [katello,sync_plans]
+
+- name: remove duplicate products from sync plan list
+  set_fact:
+    sync_plan_products: "{{ sync_plan_products | unique }}"
+  tags: [katello,sync_plans]
+ 
+- name: create/update sync plan
+  katello_sync_plan:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    name: "{{ item.1.name }}"
+    organization: "{{ item.0.name }}"
+    interval: "{{ item.1.interval }}"
+    enabled: "{{ item.1.enabled }}"
+    sync_date: "{{ item.1.date }}"
+    #cron_expression:
+    #description: "{{ item.1.description }}"
+    products: "{{ sync_plan_products }}"
+  with_subelements:
+    - "{{ satellite_orgs }}"
+    - sync_plans
+  loop_control:
+    label: "{{ sync_plan_products }}"
+  when: configure_katello_sync_plans
+  tags: [katello,sync_plans]

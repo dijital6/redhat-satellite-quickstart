@@ -1,0 +1,16 @@
+- name: create/update lifecycle environments
+  katello_lifecycle_environment:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    description: "{{ item.desc | default('') }}"
+    label: "{{ item.name }}"
+    name: "{{ item.name }}"
+    organization: "{{ outer_item.name }}"
+    prior: "{{ item.prior }}"
+    state: "{{ item.state | default(omit) }}"
+  loop: "{{ lifecycle_environments }}"
+  loop_control:
+    label: "{{ item.name }}"
+  tags: [katello,lcenv]

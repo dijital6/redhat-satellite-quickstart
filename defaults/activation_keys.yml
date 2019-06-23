@@ -8,14 +8,21 @@ rhel7_ak:
       - label: rhel-7-server-optional-rpms
         override: enabled
     auto_attach: False
+    create: True
 
-#  - rhel8: "act-os-rhel-8Server"
-#    lifecycle_environment: "Library"
-#    content_view: 'cv-os-rhel8'
-#    subscriptions:
-#      #- name: "Red Hat Enterprise Linux Server, Standard (1 Virtual Node)"
-#      - name: "Employee SKU"
-#    content_overrides:
-#      - label: rhel-8-server-optional-rpms
-#        override: enabled
-#    auto_attach: False
+rhel8_ak:
+  - name: "act-os-rhel-8Server"
+    lifecycle_environment: "Library"
+    content_view: 'cv-os-rhel8'
+    subscriptions:
+      #- name: "Red Hat Enterprise Linux Server, Standard (1 Virtual Node)"
+      - name: "Employee SKU"
+    content_overrides:
+      - label: rhel-8-server-optional-rpms
+        override: enabled
+    auto_attach: False
+    create: True
+
+ansible_ak:
+  - name: "act-app-ansible"
+    create: False

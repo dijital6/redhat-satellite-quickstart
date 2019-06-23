@@ -1,2 +1,7 @@
 ---
 upload_manifest: false
+rhel_product: []
+product_ak: []
+product_cv: []
+#all_products: []
+location_orgs: []

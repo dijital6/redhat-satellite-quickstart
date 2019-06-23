@@ -77,7 +77,8 @@ satellite_orgs:
 
 
 # Content views
-rhel_cv_name: "cv-os-rhel{{ rhel_major }}"
+rhel7_cv_name: "cv-os-rhel{{ rhel_major }}"
+rhel8_cv_name: "cv-os-rhel8"
 ansible_cv_name: "cv-app-ansible"
 
 # Subnets

@@ -6,28 +6,25 @@
   loop_control:
     label: "{{ item.0.product }}"
   register: enable_repo_results
-  tags: [katello,build_list]
+  tags: [katello,sync_plans]
 
 - name: remove duplicate products from sync plan list
   set_fact:
     sync_plan_products: "{{ sync_plan_products | unique }}"
-  #tags: [katello,sync_plans]
-  tags: [katello,build_list]
+  tags: [katello,sync_plans]
 
-- name: enable Red Hat product repository"
-  katello_repository_set:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
-    server_url: "{{ satellite_url }}"
-    verify_ssl: "{{ satellite_verify_ssl }}"
-    organization: "{{ item.1.name }}"
-    label: "{{ item.0.label }}"
-    repositories: "{{ item.0.repositories }}"
-    state: "{{ item.0.state }}"
+- name: include the product_repos tasks
+  include_tasks: product_repos.yml
+  vars:
+    product_org: "{{ item.1.name }}"
+    product_label: "{{ item.0.label }}"
+    product_reposets: "{{ item.0.repositories }}"
+    product_state: "{{ item.0.state }}"
   loop: "{{ lookup('vars', product_item + '_product')|product(satellite_orgs)|list }}" 
   loop_control:
     label: "{{ item.0.label }}"
-  tags: [katello,build_list]
+  notify: setup syncplan
+  tags: [katello,repo]
 
 - name: create/update Content Views
   katello_content_view:
@@ -42,7 +39,7 @@
   loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
   loop_control:
     label: "{{ item.1.name }}"
-  tags: [katello,build_list]
+  tags: [katello,cv]
 
 - name: publish content view to library
   katello_content_view_version:
@@ -58,7 +55,7 @@
   loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
   loop_control:
     label: "{{ item.0.name }}"
-  tags: [katello,build_list]
+  tags: [katello,cv]
 
 - name: "ensure version one of the content view is in all specified lifecyle environments"
   katello_content_view_version:
@@ -73,7 +70,7 @@
   loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
   loop_control:
     label: "{{ item.0.name }}"
-  tags: [katello,build_list]
+  tags: [katello,cv]
 
 - name: create/update Activation Keys
   katello_activation_key:
@@ -91,26 +88,6 @@
   loop_control:
     label: "{{ item.0.name }}"
   when: item.0.create
-  tags: [katello,build_list]
+  tags: [katello,ak]
 
-- name: create/update sync plan
-  katello_sync_plan:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
-    server_url: "{{ satellite_url }}"
-    verify_ssl: "{{ satellite_verify_ssl }}"
-    name: "{{ item.1.name }}"
-    organization: "{{ item.0.name }}"
-    interval: "{{ item.1.interval }}"
-    enabled: "{{ item.1.enabled }}"
-    sync_date: "{{ item.1.date }}"
-    #cron_expression:
-    #description: "{{ item.1.description }}"
-    products: "{{ sync_plan_products }}"
-  with_subelements:
-    - "{{ satellite_orgs }}"
-    - sync_plans
-  loop_control:
-    label: "{{ sync_plan_products }}"
-  when: configure_katello_sync_plans
-  tags: [katello,build_list]
+- meta: flush handlers

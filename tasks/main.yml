@@ -1,4 +1,9 @@
 ---
+- name: setup epel repo, install python-pip and install nailgun pip
+  import_tasks: "{{ role_path }}/tasks/install.yml"
+  when: configure_katello_nailgun_install
+  tags: [nailgun]
+
 - name: include satellite content views variables
   include_vars: "../vars/satellite_content_views.yml"
   tags: [always]
@@ -11,11 +16,6 @@
   include_vars: "../defaults/activation_keys.yml"
   tags: [always]
 
-- name: setup epel repo, install python-pip and install nailgun pip
-  import_tasks: "{{ role_path }}/tasks/install.yml"
-  when: configure_katello_nailgun_install
-  tags: [nailgun]
-
 - name: create orgs and locations
   import_tasks: "{{ role_path }}/tasks/taxonomies.yml"
   tags: [katello,org,location,taxonomies]
@@ -24,17 +24,38 @@
   import_tasks: "{{ role_path }}/tasks/manifest.yml"
   tags: [katello,manifest]
 
+- name: build list of all products
+  set_fact:
+    rhel_product: "{{ rhel_product  }} + [ '{{ item }}' ]"
+  loop: "{{ satellite_orgs.0.products }}"
+  loop_control:
+    label: "{{ item }}"
+  when: item + '_product' in hostvars[inventory_hostname]
+  tags: [katello,build_list]
+
+- name: getting organizaitons for lifecycle environments
+  include_tasks: lifecyle_env.yml
+  loop: "{{ satellite_orgs }}"
+  loop_control:
+    loop_var: outer_item
+    label: outer_item.name
+  tags: [katello,lcenv]
+
+- name: setup up Satellite content
+  include_tasks: configure_content.yml
+  loop: "{{ rhel_product }}"
+  loop_control:
+    loop_var: product_item
+    label: "{{ product_item }}"
+  tags: [katello,sync_plans,repo,cv,ak]
+
 #- name: enable red hat products repos and repositories
 #  import_tasks: "{{ role_path }}/tasks/products.yml"
 #  tags: [katello,repos,products]
 
-- name: sync products repos and repositories
-  import_tasks: "{{ role_path }}/tasks/sync_plan.yml"
-  tags: [katello,sync_plan]
-
-- name: create/update satellite content
-  import_tasks: "{{ role_path }}/tasks/content.yml"
-  tags: [katello,cv,lcenv,ak]
+#- name: sync products repos and repositories
+#  import_tasks: "{{ role_path }}/tasks/sync_plan.yml"
+#  tags: [katello,sync_plan]
 
 - name: create/update domains
   import_tasks: "{{ role_path }}/tasks/provision.yml"

@@ -3,6 +3,8 @@
 # Empty list to be populated when creating sync plan
 sync_plan_products: []
 
+# current the katello_repository_set fails to enable RHEL8 repos
+# TODO: implement this using hammer as a workaround
 rhel8_product:
   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs)"
     label: rhel-8-for-x86_64-baseos-rpms
@@ -13,6 +15,34 @@ rhel8_product:
         basearch: "{{ arch }}"
   - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)"
     label: rhel-8-for-x86_64-appstream-rpms
+    state: enabled
+    product: *rhel8
+    repositories:
+      - releasever: "8"
+        basearch: "{{ arch }}"
+  - name: "Red Hat Satellite Tools 6.5 for RHEL 8 x86_64 (RPMs)"
+    label: satellite-tools-6.5-for-rhel-8-x86_64-rpms
+    state: enabled
+    product: *rhel8
+    repositories:
+      - releasever: "8"
+        basearch: "{{ arch }}"
+  - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary (RPMs)"
+    label: rhel-8-for-x86_64-supplementary-rpms
+    state: enabled
+    product: *rhel8
+    repositories:
+      - releasever: "8"
+        basearch: "{{ arch }}"
+  - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream (Kickstart)"
+    label: rhel-8-for-x86_64-appstream-kickstart
+    state: enabled
+    product: *rhel8
+    repositories:
+      - releasever: "8"
+        basearch: "{{ arch }}"
+  - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Kickstart)"
+    label: rhel-8-for-x86_64-baseos-kickstart
     state: enabled
     product: *rhel8
     repositories:
@@ -68,4 +98,10 @@ rhel7_product:
       - releasever: "7Server"
         basearch: "{{ arch }}"
 
-
+ansible_product:
+  - reposet: "Red Hat Ansible Engine {{ ansible_major }} RPMs for Red Hat Enterprise Linux {{ rhel_major }} Server"
+    label: rhel-7-server-ansible-2-rpms
+    product: Red Hat Ansible Engine
+    state: enabled
+    repositories:
+      - basearch: "{{ arch }}"

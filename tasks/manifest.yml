@@ -17,12 +17,12 @@
     - pool
   loop_control:
     label: "{{ item.0.manifest }}"
-  when:
-    - not( (item.1.id is none ) or (item.1.id | trim == '') )
-    - item.0.create_manifest
-    - not item.0.use_local_manifest
+  when: not(item.0.use_local_manifest)
+#    - not( (item.1.id is none ) or (item.1.id | trim == '') )
+ #   - item.0.create_manifest
+  #  - not item.0.use_local_manifest
   register: rhsm_manifest
-  tags: manifest
+  tags: [katello,manifest]
 
 - name: copy local manifest to satellite
   copy:
@@ -35,8 +35,8 @@
     label: "{{ item.manifest }}"
   when: 
     - item.use_local_manifest
-    - not( (item.manifest is none ) or (item.manifest | trim == '') )
-  tags: manifest
+#    - not( (item.manifest is none ) or (item.manifest | trim == '') )
+  tags: [katello,manifest]
 
 - name: attach manifest to Satellite org
   katello_manifest:
@@ -51,7 +51,7 @@
   with_items: "{{ satellite_orgs }}"
   loop_control: 
     label: "{{ item.manifest }}"
-  when:
-    - rhsm_manifest.changed or copy_rhsm_manifest.changed or force_manifest_upload
-    - not( (item.manifest is none ) or (item.manifest | trim == '') )
-  tags: manifest
+#  when:
+#    - rhsm_manifest.changed or copy_rhsm_manifest.changed or force_manifest_upload
+#    - not( (item.manifest is none ) or (item.manifest | trim == '') )
+  tags: [katello,manifest]

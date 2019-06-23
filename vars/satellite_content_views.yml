@@ -1,19 +1,38 @@
 ---
 rhel7_cv:
-  - name: "{{ rhel_cv_name }}"
+  - name: "{{ rhel7_cv_name }}"
     state: present
-    product: &cv_product_rhel Red Hat Enterprise Linux Server
+    product: &cv_product_rhel7 Red Hat Enterprise Linux Server
     repos:
-      - name: "Red Hat Enterprise Linux {{ rhel_major }} Server RPMs {{ arch }} {{ rhel_major }}Server"
-        product: *cv_product_rhel
-      - name: "Red Hat Enterprise Linux {{ rhel_major }} Server - Extras RPMs {{ arch }}"
-        product: *cv_product_rhel
-      - name: "Red Hat Satellite Tools {{ satellite_version }} for RHEL {{ rhel_major }} Server RPMs {{ arch }}"
-        product: *cv_product_rhel
-      - name: "Red Hat Enterprise Linux {{ rhel_major }} Server - Supplementary RPMs {{ arch }} {{ rhel_major }}Server"
-        product: *cv_product_rhel
-      - name: "Red Hat Enterprise Linux {{ rhel_major }} Server - Optional RPMs {{ arch }} {{ rhel_major }}Server"
-        product: *cv_product_rhel
+      - name: "Red Hat Enterprise Linux 7 Server RPMs {{ arch }} 7Server"
+        product: *cv_product_rhel7
+      - name: "Red Hat Enterprise Linux 7 Server - Extras RPMs {{ arch }}"
+        product: *cv_product_rhel7
+      - name: "Red Hat Satellite Tools {{ satellite_version }} for RHEL 7 Server RPMs {{ arch }}"
+        product: *cv_product_rhel7
+      - name: "Red Hat Enterprise Linux 7 Server - Supplementary RPMs {{ arch }} 7Server"
+        product: *cv_product_rhel7
+      - name: "Red Hat Enterprise Linux 7 Server - Optional RPMs {{ arch }} 7Server"
+        product: *cv_product_rhel7
+
+# disabled for now because the modules does not see to know how to work with RHEL8
+rhel8_cv:
+  - name: "{{ rhel8_cv_name }}"
+    state: present
+    product: &cv_product_rhel8 Red Hat Enterprise Linux for x86_64
+    repos:
+      - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS RPMs x86_64 8"
+        product: *cv_product_rhel8
+#      - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream RPMs x86_64 8"
+#        product: *cv_product_rhel8
+#      - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary RPMs x86_64 8"
+#        product: *cv_product_rhel8
+#      - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart x86_64 8"
+#        product: *cv_product_rhel8
+#      - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart x86_64 8"
+#        product: *cv_product_rhel8
+#      - name: "Red Hat Satellite Tools 6.5 for RHEL 8 x86_64 RPMs x86_64"
+#        product: *cv_product_rhel8
 
 ansible_cv:
   - name: "{{ ansible_cv_name }}"

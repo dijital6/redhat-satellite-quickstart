@@ -78,7 +78,7 @@ How To Use This Role
 
 **Products**
 
-This role is built around enabled the Red Hat products you have a subscription entitlement to. For each product or product group listed it will:
+This role is built around enabling the Red Hat products you have a subscription entitlement to. For each product or product group listed it will:
   - enable the product repository
   - create a content view or composite content
   - promote the content view to Library
@@ -104,7 +104,7 @@ How to find your subscription pool:
 4. Select the subscription number
 
 ```
-- name: PLAY| create a organization and location, create RHSM manifest and add it to Satellite
+- name: PLAY| setup organization and location with a manifest from RHSM and enable RHEL7 and Ansible products
   hosts: sat01
   remote_user: root
   become: false
@@ -114,15 +114,13 @@ How to find your subscription pool:
     satellite_user_pass: "{{ satellite_pass }}"
     satellite_url: "https://{{ satellite_hostname }}.{{ satellite_domain }}"
     satellite_verify_ssl: no
-    force_manifest_upload: false
     rhsm_password: "{{ vault_rhsm_pass }}"
     rhsm_user: "{{ vault_rhsm_user }}"
     manifest_download_path: /root
-    local_manifest_path: ~/files/satellite_manifest
     satellite_orgs:
-      - name: FedSI
+      - name: MyORG
         state: present
-        manifest: FedSISatelliteManifest
+        manifest: MyORGSatelliteManifest
         manifest_state: present
         create_manifest: true
         use_local_manifest: false
@@ -134,17 +132,21 @@ How to find your subscription pool:
         location:
           - name: Tysons
             state: present
-        products: ""
-        content_views: ""
-        activation_keys: ""
+        products:
+          - rhel7
+          - ansible
+        lifecycle_environments:
+          - Library
+          - Dev
+          - QA
+          - Production
         sync_plans:
-          - name: ""
-            date: ""
-            interval: ""
-            enabled: ""
-            products:
-              - name: ""
-              - name: ""
+          - name: "Red Hat Sync Plan"
+            date: "2019/06/16 00:00:00 +0000"
+            interval: daily
+            enabled: true
+            description: "Sync Plan for Red Hat products"
+
   tasks:
   - name: TASK| runnning ansible-role-configure-katello
     include_role:

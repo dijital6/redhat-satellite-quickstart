@@ -1,0 +1,16 @@
+---
+- name: enable Red Hat product repository
+  block:
+    - name: enabling product "{{ product_label }}"
+      katello_repository_set:
+        username: "{{ satellite_admin_user }}"
+        password: "{{ satellite_user_pass }}"
+        server_url: "{{ satellite_url }}"
+        verify_ssl: "{{ satellite_verify_ssl }}"
+        organization: "{{ product_org }}"
+        label: "{{ product_label }}"
+        repositories: "{{ product_reposets }}"
+        state: "{{ product_state }}"
+  rescue:
+    - debug:
+        msg: "Could not enable {{ product_label }} repository"

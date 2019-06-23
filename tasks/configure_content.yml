@@ -1,0 +1,116 @@
+---
+- name: build sync plan products
+  set_fact:
+    sync_plan_products: "{{ sync_plan_products }} + [ '{{ item.0.product }}' ]"
+  loop: "{{ lookup('vars', product_item + '_product')|product(satellite_orgs)|list }}" 
+  loop_control:
+    label: "{{ item.0.product }}"
+  register: enable_repo_results
+  tags: [katello,build_list]
+
+- name: remove duplicate products from sync plan list
+  set_fact:
+    sync_plan_products: "{{ sync_plan_products | unique }}"
+  #tags: [katello,sync_plans]
+  tags: [katello,build_list]
+
+- name: enable Red Hat product repository"
+  katello_repository_set:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    organization: "{{ item.1.name }}"
+    label: "{{ item.0.label }}"
+    repositories: "{{ item.0.repositories }}"
+    state: "{{ item.0.state }}"
+  loop: "{{ lookup('vars', product_item + '_product')|product(satellite_orgs)|list }}" 
+  loop_control:
+    label: "{{ item.0.label }}"
+  tags: [katello,build_list]
+
+- name: create/update Content Views
+  katello_content_view:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    name: "{{ item.0.name }}"
+    organization: "{{ item.1.name }}"
+    repositories: "{{ item.0.repos | default(omit) }}"
+    state: "{{ item.0.state | default(omit) }}"
+  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
+  loop_control:
+    label: "{{ item.1.name }}"
+  tags: [katello,build_list]
+
+- name: publish content view to library
+  katello_content_view_version:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    content_view: "{{ item.0.name }}"
+    organization: "{{ item.1.name }}"
+    version: "{{ cv_default_ver }}"
+    lifecycle_environments:
+      - "{{ cv_default_lc }}"
+  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
+  loop_control:
+    label: "{{ item.0.name }}"
+  tags: [katello,build_list]
+
+- name: "ensure version one of the content view is in all specified lifecyle environments"
+  katello_content_view_version:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    content_view: "{{ item.0.name }}"
+    organization: "{{ item.1.name }}"
+    version: "{{ cv_default_ver }}"
+    lifecycle_environments: "{{ item.1.lifecycle_environments }}"
+  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
+  loop_control:
+    label: "{{ item.0.name }}"
+  tags: [katello,build_list]
+
+- name: create/update Activation Keys
+  katello_activation_key:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    name: "{{ item.0.name }}"
+    organization: "{{ item.1.name }}"
+    lifecycle_environment: "{{ item.0.lifecycle_environment }}"
+    content_view: "{{ item.0.content_view }}"
+    subscriptions: "{{ item.0.subscriptions }}"
+    auto_attach: "{{ item.0.auto_attach | default(omit) }}"
+  loop: "{{ lookup('vars', product_item + '_ak')|product(satellite_orgs)|list }}" 
+  loop_control:
+    label: "{{ item.0.name }}"
+  when: item.0.create
+  tags: [katello,build_list]
+
+- name: create/update sync plan
+  katello_sync_plan:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    name: "{{ item.1.name }}"
+    organization: "{{ item.0.name }}"
+    interval: "{{ item.1.interval }}"
+    enabled: "{{ item.1.enabled }}"
+    sync_date: "{{ item.1.date }}"
+    #cron_expression:
+    #description: "{{ item.1.description }}"
+    products: "{{ sync_plan_products }}"
+  with_subelements:
+    - "{{ satellite_orgs }}"
+    - sync_plans
+  loop_control:
+    label: "{{ sync_plan_products }}"
+  when: configure_katello_sync_plans
+  tags: [katello,build_list]

@@ -76,7 +76,7 @@ force_manifest_upload|:x:|false|force the upload of a manifest to Satellite
 How To Use This Role
 --------------------
 
-** Products **
+**Products**
 
 This role is built around enabled the Red Hat products you have a subscription entitlement to. For each product or product group listed it will:
   - enable the product repository
@@ -85,7 +85,7 @@ This role is built around enabled the Red Hat products you have a subscription e
   - create corresponding activation key
   - create a sync plan
 
-** Subscriptions **
+**Subscriptions**
 
 You will need to edit ```defaults/activation_keys.yml``` with your subscription details for each activation key you want created.
 

@@ -90,6 +90,8 @@ This role is built around enabling the Red Hat products you have a subscription 
 By default actication keys are created without any associated activation keys. 
 You will need to edit ```defaults/activation_keys.yml``` with your subscription details for each activation key you want created.
 
+For conveince, the variable *default_subscription* can be set instead of editing ```defaults/activation_keys.yml```. This is useful if you have oen subscription or a subscription that bundles lots of products like the one use in the example below.
+
 Example Playbook
 ----------------
 

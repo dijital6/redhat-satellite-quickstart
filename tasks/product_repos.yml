@@ -11,6 +11,7 @@
         label: "{{ product_label }}"
         repositories: "{{ product_reposets }}"
         state: "{{ product_state }}"
+      register: products_enabled
   rescue:
     - debug:
         msg: "Could not enable {{ product_label }} repository"

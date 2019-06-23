@@ -24,7 +24,6 @@ configure_katello_proxy: false
 extra_katello_proxy_args: ""
 
 # sync repos
-configure_katello_sync_plans: true
 run_katello_sync: false
 
 # product variables

@@ -87,6 +87,7 @@ This role is built around enabling the Red Hat products you have a subscription 
 
 **Subscriptions**
 
+By default actication keys are created without any associated activation keys. 
 You will need to edit ```defaults/activation_keys.yml``` with your subscription details for each activation key you want created.
 
 Example Playbook
@@ -117,20 +118,22 @@ How to find your subscription pool:
     rhsm_password: "{{ vault_rhsm_pass }}"
     rhsm_user: "{{ vault_rhsm_user }}"
     manifest_download_path: /root
+    default_subscription: 
+      - name: "Red Hat Cloud Suite (2-sockets), Premium"
     satellite_orgs:
       - name: MyORG
         state: present
         manifest: MyORGSatelliteManifest
         manifest_state: present
-        create_manifest: true
-        use_local_manifest: false
+        manifest_force_upload: False
+        use_local_manifest: False
         cdn_url: https://cdn.redhat.com
         pool:
           - id: 8a85f99b6977b7c0016979464ee772cb
             pool_state: present
             quantity: 7
         location:
-          - name: Tysons
+          - name: MyLocation
             state: present
         products:
           - rhel7

@@ -1,9 +1,11 @@
+redhat_os_subscription: "Red Hat Cloud Suite (2-sockets), Premium"
+
 rhel7_ak:
   - name: "act-os-rhel-7Server"
     lifecycle_environment: "Library"
     content_view: 'cv-os-rhel7'
     subscriptions:
-      - name: "Employee SKU"
+      - name: "{{ redhat_os_subscription }}"
     content_overrides:
       - label: rhel-7-server-optional-rpms
         override: enabled
@@ -16,7 +18,7 @@ rhel8_ak:
     content_view: 'cv-os-rhel8'
     subscriptions:
       #- name: "Red Hat Enterprise Linux Server, Standard (1 Virtual Node)"
-      - name: "Employee SKU"
+      - name: "{{ redhat_os_subscription }}"
     content_overrides:
       - label: rhel-8-server-optional-rpms
         override: enabled

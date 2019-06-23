@@ -1,7 +1,7 @@
 ---
 - name: enable Red Hat product repository
   block:
-    - name: enabling product "{{ product_label }}"
+    - name: enabling product {{ product_label }}
       katello_repository_set:
         username: "{{ satellite_admin_user }}"
         password: "{{ satellite_user_pass }}"

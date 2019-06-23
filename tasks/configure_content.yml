@@ -23,23 +23,27 @@
   loop: "{{ lookup('vars', product_item + '_product')|product(satellite_orgs)|list }}" 
   loop_control:
     label: "{{ item.0.label }}"
-  notify: setup syncplan
   tags: [katello,repo]
 
-- name: create/update Content Views
-  katello_content_view:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
-    server_url: "{{ satellite_url }}"
-    verify_ssl: "{{ satellite_verify_ssl }}"
-    name: "{{ item.0.name }}"
-    organization: "{{ item.1.name }}"
-    repositories: "{{ item.0.repos | default(omit) }}"
-    state: "{{ item.0.state | default(omit) }}"
-  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
-  loop_control:
-    label: "{{ item.1.name }}"
-  tags: [katello,cv]
+- name: create or update content views
+  block:
+    - name: modifying content view
+      katello_content_view:
+        username: "{{ satellite_admin_user }}"
+        password: "{{ satellite_user_pass }}"
+        server_url: "{{ satellite_url }}"
+        verify_ssl: "{{ satellite_verify_ssl }}"
+        name: "{{ item.0.name }}"
+        organization: "{{ item.1.name }}"
+        repositories: "{{ item.0.repos | default(omit) }}"
+        state: "{{ item.0.state | default(omit) }}"
+      loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
+      loop_control:
+        label: "{{ item.1.name }}"
+      tags: [katello,cv]
+  rescue:
+    - fail:
+        msg: "The reported failed repository needs to be commented out from vars/satellite_content_views.yml for this task to execute successfully."
 
 - name: publish content view to library
   katello_content_view_version:
@@ -90,4 +94,25 @@
   when: item.0.create
   tags: [katello,ak]
 
-- meta: flush handlers
+- name: setup syncplan
+  katello_sync_plan:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    verify_ssl: "{{ satellite_verify_ssl }}"
+    name: "{{ item.1.name }}"
+    organization: "{{ item.0.name }}"
+    interval: "{{ item.1.interval }}"
+    enabled: "{{ item.1.enabled }}"
+    sync_date: "{{ item.1.date }}"
+    #cron_expression:
+    #description: "{{ item.1.description }}"
+    products: "{{ sync_plan_products }}"
+  with_subelements:
+    - "{{ satellite_orgs }}"
+    - sync_plans
+  loop_control:
+    label: "{{ sync_plan_products }}"
+  when: configure_katello_sync_plans
+  tags: [katello,sync_plans]
+

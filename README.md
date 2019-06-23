@@ -55,7 +55,6 @@ sudo pip install git+https://github.com/SatelliteQE/nailgun.git@master#egg=nailg
 #sudo pip install apypie
 sudo yum install python-six pytz python-netaddr
 ```
-
 Note: This role was developed using the nailgun branch of the foreman-ansible-modules make sure you checkout this branch.
 
 Role Variables
@@ -74,10 +73,28 @@ satellite_url|:heavy_check_mark: |null|satellite server url https://satellite.co
 satellite_verify_ssl|:x:|no|"default is to use basic auth
 force_manifest_upload|:x:|false|force the upload of a manifest to Satellite
 
+How To Use This Role
+--------------------
+
+** Products **
+
+This role is built around enabled the Red Hat products you have a subscription entitlement to. For each product or product group listed it will:
+  - enable the product repository
+  - create a content view or composite content
+  - promote the content view to Library
+  - create corresponding activation key
+  - create a sync plan
+
+** Subscriptions **
+
+You will need to edit ```defaults/activation_keys.yml``` with your subscription details for each activation key you want created.
+
 Example Playbook
 ----------------
 
 **Create your first ORG and upload a manifest**
+
+This example will create and download the manifest required for Satellite. You will need a subscription pool to continue with this example.
 
 How to find your subscription pool:
 

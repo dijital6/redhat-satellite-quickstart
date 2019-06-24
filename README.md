@@ -25,11 +25,13 @@ Products and Content Views
 
 **Products**
 
+Currently supported products:
+
 - ansible
-- rhel8 (broken)
+- rhel8 (broken) - you have to manually enable the repos, everything else works.
 - rhel7
 - osp14
-- ceph3
+- ceph3 (content view and activationkeys are WIP)
 
 
 Requirements

@@ -1,4 +1,7 @@
 ---
+
+#TODO: the product key is seems to be only needed for the repos
+# commenting it out and should remove after testing june 24, 2019
 rhel7_cv:
   - name: "{{ rhel7_cv_name }}"
     state: present
@@ -58,7 +61,11 @@ osp14_cv:
 ceph3_cv:
   - name: "cv-app-ceph3"
     state: present
-    product: &ceph3_osd_product_cv Red Hat Ceph Storage OSD
+    #product: &ceph3_osd_product_cv Red Hat Ceph Storage OSD
     repos:
-      - name: "Red Hat OpenStack Platform {{ osp_major }} Developer Tools for RHEL 7 RPMs {{ arch }}"
-        product: *ceph3_osd_product_cv
+      - name: "Red Hat Ceph Storage MON 3 for Red Hat Enterprise Linux 7 Server RPMs x86_64"
+        product: Red Hat Ceph Storage MON
+      - name: "Red Hat Ceph Storage OSD 3 for Red Hat Enterprise Linux 7 Server RPMs x86_64"
+        product: Red Hat Ceph Storage OSD
+      - name: "Red Hat Ceph Storage Tools 3 for Red Hat Enterprise Linux 7 Server RPMs x86_64"
+        product: Red Hat Ceph Storage

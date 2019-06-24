@@ -31,7 +31,7 @@ Currently supported products:
 - rhel8 (broken) - you have to manually enable the repos, everything else works.
 - rhel7
 - osp14
-- ceph3 (content view and activationkeys are WIP)
+- ceph3
 
 
 Requirements

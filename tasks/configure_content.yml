@@ -23,7 +23,6 @@
   loop: "{{ lookup('vars', product_item + '_product')|product(satellite_orgs)|list }}" 
   loop_control:
     label: "{{ item.0.label }}"
-  #register: products_enabled
   tags: [katello,repo]
 
 - name: create or update content views
@@ -89,6 +88,7 @@
     content_view: "{{ item.0.content_view }}"
     subscriptions: "{{ item.0.subscriptions | default(omit) }}"
     auto_attach: "{{ item.0.auto_attach | default(omit) }}"
+    content_overrides: "{{ item.0.content_overrides | default(omit) }}"
   loop: "{{ lookup('vars', product_item + '_ak')|product(satellite_orgs)|list }}" 
   loop_control:
     label: "{{ item.0.name }}"

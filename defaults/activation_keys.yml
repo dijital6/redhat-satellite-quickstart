@@ -5,7 +5,6 @@ rhel7_ak:
     lifecycle_environment: "Library"
     content_view: 'cv-os-rhel7'
     subscriptions: "{{ default_subscription }}"
-#      - name: "{{ default_subscription }}"
     content_overrides:
       - label: rhel-7-server-optional-rpms
         override: enabled
@@ -28,3 +27,21 @@ rhel8_ak:
 ansible_ak:
   - name: "act-app-ansible"
     create: False
+
+osp14_ak:
+  - name: "act-app-osp{{ osp_major }}"
+    lifecycle_environment: "Library"
+    content_view: "cv-app-osp{{ osp_major }}"
+    subscriptions: "{{ default_subscription }}"
+    content_overrides: []
+    auto_attach: False
+    create: True
+
+ceph3_ak:
+  - name: "act-app-ceph3"
+    lifecycle_environment: "Library"
+    content_view: "cv-app-ceph3}"
+    subscriptions: "{{ default_subscription }}"
+    content_overrides: []
+    auto_attach: False
+    create: True

@@ -15,3 +15,4 @@
   rescue:
     - debug:
         msg: "Could not enable {{ product_label }} repository"
+  tags: [katello,repo]

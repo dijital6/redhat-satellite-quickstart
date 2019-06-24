@@ -31,7 +31,7 @@
   loop_control:
     label: "{{ item }}"
   when: item + '_product' in hostvars[inventory_hostname]
-  tags: [katello,build_list]
+  tags: [katello,repo,cv,ak,sync_plans]
 
 - name: getting organizaitons for lifecycle environments
   include_tasks: lifecyle_env.yml
@@ -48,14 +48,6 @@
     loop_var: product_item
     label: "{{ product_item }}"
   tags: [katello,sync_plans,repo,cv,ak]
-
-#- name: enable red hat products repos and repositories
-#  import_tasks: "{{ role_path }}/tasks/products.yml"
-#  tags: [katello,repos,products]
-
-#- name: sync products repos and repositories
-#  import_tasks: "{{ role_path }}/tasks/sync_plan.yml"
-#  tags: [katello,sync_plan]
 
 - name: create/update domains
   import_tasks: "{{ role_path }}/tasks/provision.yml"

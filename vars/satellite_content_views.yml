@@ -15,7 +15,6 @@ rhel7_cv:
       - name: "Red Hat Enterprise Linux 7 Server - Optional RPMs {{ arch }} 7Server"
         product: *cv_product_rhel7
 
-# disabled for now because the modules does not see to know how to work with RHEL8
 rhel8_cv:
   - name: "{{ rhel8_cv_name }}"
     state: present
@@ -23,16 +22,16 @@ rhel8_cv:
     repos:
       - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS RPMs x86_64 8"
         product: *cv_product_rhel8
-#      - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream RPMs x86_64 8"
-#        product: *cv_product_rhel8
-#      - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary RPMs x86_64 8"
-#        product: *cv_product_rhel8
-#      - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart x86_64 8"
-#        product: *cv_product_rhel8
-#      - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart x86_64 8"
-#        product: *cv_product_rhel8
-#      - name: "Red Hat Satellite Tools 6.5 for RHEL 8 x86_64 RPMs x86_64"
-#        product: *cv_product_rhel8
+      - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream RPMs x86_64 8"
+        product: *cv_product_rhel8
+      - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary RPMs x86_64 8"
+        product: *cv_product_rhel8
+      - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart x86_64 8"
+        product: *cv_product_rhel8
+      - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart x86_64 8"
+        product: *cv_product_rhel8
+      - name: "Red Hat Satellite Tools 6.5 for RHEL 8 x86_64 RPMs x86_64"
+        product: *cv_product_rhel8
 
 ansible_cv:
   - name: "{{ ansible_cv_name }}"
@@ -41,3 +40,25 @@ ansible_cv:
     repos:
       - name: "Red Hat Ansible Engine {{ ansible_major }} RPMs for Red Hat Enterprise Linux {{ rhel_major }} Server {{ arch }}"
         product: Red Hat Ansible Engine
+
+osp14_cv:
+  - name: "cv-app-osp{{ osp_major }}"
+    state: present
+    product: &osp_product_cv Red Hat OpenStack
+    repos:
+      - name: "Red Hat OpenStack Platform {{ osp_major }} Developer Tools for RHEL 7 RPMs {{ arch }}"
+        product: *osp_product_cv
+      - name: "Red Hat OpenStack Platform {{ osp_major }} for RHEL 7 RPMs {{ arch }}"
+        product: *osp_product_cv
+      - name: "Red Hat OpenStack Platform {{ osp_major }} Operational Tools for RHEL 7 RPMs {{ arch }}"
+        product: *osp_product_cv
+      - name: "Red Hat OpenStack Platform {{ osp_major }} Tools for RHEL 7 Server RPMs {{ arch }}"
+        product: Red Hat Enterprise Linux Server
+
+ceph3_cv:
+  - name: "cv-app-ceph3"
+    state: present
+    product: &ceph3_osd_product_cv Red Hat Ceph Storage OSD
+    repos:
+      - name: "Red Hat OpenStack Platform {{ osp_major }} Developer Tools for RHEL 7 RPMs {{ arch }}"
+        product: *ceph3_osd_product_cv

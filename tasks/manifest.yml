@@ -17,7 +17,7 @@
     - pool
   loop_control:
     label: "{{ item.0.manifest }}"
-  when: not(item.0.use_local_manifest)
+  when: not(item.0.use_local_manifest) and item.0.manifest_rhsm
   register: rhsm_manifest
   tags: [katello,manifest]
 

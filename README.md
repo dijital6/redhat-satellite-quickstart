@@ -1,4 +1,4 @@
-ansible-role-configure-katello
+Red Hat Satellite 6 Day Two Ops
 ===============================
 
 :warning: Work in progress.

@@ -43,17 +43,10 @@
   when: item + '_product' in hostvars[inventory_hostname]
   tags: [katello,repo,cv,ak,sync_plans]
 
-- name: getting organizaitons for lifecycle environments
+- name: create lifecycle environments
   import_tasks: "{{ role_path }}/tasks/lifecyle_env.yml"
   tags: [katello,lcenv]
 
-#- name: getting organizaitons for lifecycle environments
-#  include_tasks: lifecyle_env.yml
-#  loop: "{{ satellite_orgs }}"
-#  loop_control:
-#    loop_var: outer_item
-#    label: outer_item.name
-#  tags: [katello,lcenv]
 
 #- name: setup up Satellite content
 #  include_tasks: configure_content.yml
@@ -76,3 +69,11 @@
 #    -  settings
 #    - repository
 
+# Tasks below here should be deleted
+#- name: getting organizaitons for lifecycle environments
+#  include_tasks: lifecyle_env.yml
+#  loop: "{{ satellite_orgs }}"
+#  loop_control:
+#    loop_var: outer_item
+#    label: outer_item.name
+#  tags: [katello,lcenv]

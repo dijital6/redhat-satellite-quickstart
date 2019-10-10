@@ -2,7 +2,7 @@
 #TODO: this currently on works on adding one pool to the manifest, this should be able to handle
 #      multiple pools
 - name: delete or create a subscription allocations with subscriptions and download the manifest
-  redhat_manifest:
+  theforeman.foreman.redhat_manifest:
     name: "{{ item.0.manifest }}"
     username: "{{ rhsm_user }}"
     password: "{{ rhsm_password }}"
@@ -35,11 +35,11 @@
   tags: [katello,manifest]
 
 - name: attach manifest to Satellite org
-  katello_manifest:
+  theforeman.foreman.katello_manifest:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
-    verify_ssl: "{{ satellite_verify_ssl }}"
+    validate_certs: "{{ satellite_verify_ssl }}"
     organization: "{{ item.name }}"
     manifest_path: "{{ manifest_download_path }}/{{ item.manifest }}.zip"
     redhat_repository_url: "{{ item.cdn_url | default(omit) }}"

@@ -1,8 +1,18 @@
 ---
-- name: setup epel repo, install python-pip and install nailgun pip
-  import_tasks: "{{ role_path }}/tasks/install.yml"
-  when: configure_katello_nailgun_install
-  tags: [nailgun]
+- name: add foreman-ansible-modules EPEL repository
+  yum_repository:
+    name: foreman-ansible-modules
+    description: Copr repo for foreman-ansible-modules owned by evgeni
+    baseurl: https://copr-be.cloud.fedoraproject.org/results/evgeni/foreman-ansible-modules/epel-7-$basearch/
+    gpgcheck: no
+    repo_gpgcheck: no
+    skip_if_unavailable: yes
+    gpgkey: https://copr-be.cloud.fedoraproject.org/results/evgeni/foreman-ansible-modules/pubkey.gpg
+
+- name: install required package python apypie
+  package:
+    name: python2-apypie
+    state: present
 
 - name: include satellite content views variables
   include_vars: "../vars/satellite_content_views.yml"
@@ -34,24 +44,28 @@
   tags: [katello,repo,cv,ak,sync_plans]
 
 - name: getting organizaitons for lifecycle environments
-  include_tasks: lifecyle_env.yml
-  loop: "{{ satellite_orgs }}"
-  loop_control:
-    loop_var: outer_item
-    label: outer_item.name
+  import_tasks: "{{ role_path }}/tasks/lifecyle_env.yml"
   tags: [katello,lcenv]
 
-- name: setup up Satellite content
-  include_tasks: configure_content.yml
-  loop: "{{ rhel_product }}"
-  loop_control:
-    loop_var: product_item
-    label: "{{ product_item }}"
-  tags: [katello,sync_plans,repo,cv,ak]
+#- name: getting organizaitons for lifecycle environments
+#  include_tasks: lifecyle_env.yml
+#  loop: "{{ satellite_orgs }}"
+#  loop_control:
+#    loop_var: outer_item
+#    label: outer_item.name
+#  tags: [katello,lcenv]
 
-- name: create/update domains
-  import_tasks: "{{ role_path }}/tasks/provision.yml"
-  tags: [provision,domains,subnets,compute]
+#- name: setup up Satellite content
+#  include_tasks: configure_content.yml
+#  loop: "{{ rhel_product }}"
+#  loop_control:
+#    loop_var: product_item
+#    label: "{{ product_item }}"
+#  tags: [katello,sync_plans,repo,cv,ak]
+#
+#- name: create/update domains
+#  import_tasks: "{{ role_path }}/tasks/provision.yml"
+#  tags: [provision,domains,subnets,compute]
 
 #*******************************************#
 # ABOVE THIS LINE WORKS                     #

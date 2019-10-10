@@ -1,6 +1,6 @@
 ---
 - name: setup syncplan
-  katello_sync_plan:
+  theforeman.foreman.katello_sync_plan:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"

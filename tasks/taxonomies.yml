@@ -1,10 +1,10 @@
 ---
 - name: taxonomies | create Organizations
-  foreman_organization:
+  theforeman.foreman.foreman_organization:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
-    verify_ssl: "{{ satellite_verify_ssl }}"
+    validate_certs: "{{ satellite_verify_ssl }}"
     name: "{{ item.name }}"
     state: "{{ item.state }}"
   with_items: "{{ satellite_orgs }}"
@@ -13,11 +13,11 @@
   tags: [katello,taxonomies,org]
 
 - name: taxonomies | create locations
-  foreman_location:
+  theforeman.foreman.foreman_location:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
-    verify_ssl: "{{ satellite_verify_ssl }}"
+    validate_certs: "{{ satellite_verify_ssl }}"
     name: "{{ item.1.name }}"
     state: "{{ item.1.state }}"
     #organizations: "{{ location_orgs }}"

@@ -6,7 +6,7 @@
         username: "{{ satellite_admin_user }}"
         password: "{{ satellite_user_pass }}"
         server_url: "{{ satellite_url }}"
-        verify_ssl: "{{ satellite_verify_ssl }}"
+        validate_certs: "{{ satellite_verify_ssl }}"
         organization: "{{ product_org }}"
         label: "{{ product_label }}"
         repositories: "{{ product_reposets }}"

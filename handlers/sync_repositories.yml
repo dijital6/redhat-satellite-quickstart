@@ -1,6 +1,6 @@
 ---
 - name: Kick off sync
-  katello_sync:
+  theforeman.foreman.katello_sync:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"

@@ -1,16 +1,40 @@
+#- name: create/update lifecycle environments
+#  theforeman.foreman.katello_lifecycle_environment:
+#    username: "{{ satellite_admin_user }}"
+#    password: "{{ satellite_user_pass }}"
+#    server_url: "{{ satellite_url }}"
+#    validate_certs: "{{ satellite_verify_ssl }}"
+#    description: "{{ item.desc | default('') }}"
+#    label: "{{ item.name }}"
+#    name: "{{ item.name }}"
+#    organization: "{{ outer_item.name }}"
+#    prior: "{{ item.prior }}"
+#    state: "{{ item.state | default(omit) }}"
+#  loop: "{{ lifecycle_environments }}"
+#  with_subelements:
+#    - "{{ satellite_orgs }}"
+#    - lifecycle_environments
+#  loop_control:
+#    label: "{{ item.name }}"
+#  tags: [katello,lcenv]
+
+
 - name: create/update lifecycle environments
-  katello_lifecycle_environment:
+  theforeman.foreman.katello_lifecycle_environment:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
-    verify_ssl: "{{ satellite_verify_ssl }}"
-    description: "{{ item.desc | default('') }}"
-    label: "{{ item.name }}"
-    name: "{{ item.name }}"
-    organization: "{{ outer_item.name }}"
-    prior: "{{ item.prior }}"
-    state: "{{ item.state | default(omit) }}"
-  loop: "{{ lifecycle_environments }}"
+    validate_certs: "{{ satellite_verify_ssl }}"
+    name: "{{ item.1.name }}"
+    label: "{{ item.1.label | default(omit) }}"
+    organization: "{{ item.0.name }}"
+    prior: "{{ item.1.prior }}"
+    description: "{{ item.1.desc | default(omit) }}"
+    state: "{{ item.1.state }}"
+  with_subelements:
+    - "{{ satellite_orgs }}"
+    - lifecycle_environments
   loop_control:
-    label: "{{ item.name }}"
+    label: "{{ item.1.name }}"
   tags: [katello,lcenv]
+

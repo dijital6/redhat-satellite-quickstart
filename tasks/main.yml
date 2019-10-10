@@ -1,9 +1,4 @@
 ---
-- name: setup epel repo, install python-pip and install nailgun pip
-  import_tasks: "{{ role_path }}/tasks/install.yml"
-  when: configure_katello_nailgun_install
-  tags: [nailgun]
-
 - name: include satellite content views variables
   include_vars: "../vars/satellite_content_views.yml"
   tags: [always]

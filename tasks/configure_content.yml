@@ -96,6 +96,8 @@
     label: "{{ item.0.name }}"
   tags: [katello,cv]
 
+- meta: end_play
+
 - name: create/update Activation Keys
   theforeman.foreman.katello_activation_key:
     username: "{{ satellite_admin_user }}"

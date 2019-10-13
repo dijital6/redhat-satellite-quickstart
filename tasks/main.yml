@@ -47,7 +47,6 @@
   import_tasks: "{{ role_path }}/tasks/lifecyle_env.yml"
   tags: [katello,lcenv]
 
-
 - name: setup up Satellite content
   include_tasks: configure_content.yml
   loop: "{{ rhel_product }}"

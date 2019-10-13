@@ -23,12 +23,12 @@
   loop: "{{ lookup('vars', product_item + '_product')|product(satellite_orgs)|list }}" 
   loop_control:
     label: "{{ item.0.label }}"
-  tags: [katello,repo]
+  tags: [katello,repo,sync_plans]
 
 - name: create or update content views
   block:
     - name: modifying content view
-      katello_content_view:
+      theforeman.foreman.katello_content_view:
         username: "{{ satellite_admin_user }}"
         password: "{{ satellite_user_pass }}"
         server_url: "{{ satellite_url }}"
@@ -46,7 +46,7 @@
         msg: "The reported failed repository needs to be commented out from vars/satellite_content_views.yml for this task to execute successfully."
 
 - name: publish content view to library
-  katello_content_view_version:
+  theforeman.foreman.katello_content_view_version:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
@@ -61,8 +61,28 @@
     label: "{{ item.0.name }}"
   tags: [katello,cv]
 
+- name: debug katello_content_view_version
+  vars:
+    msg: |
+      "- username: {{ satellite_admin_user }}"
+      "- password: {{ satellite_user_pass }}"
+      "- server_url: {{ satellite_url }}"
+      "- validate_certs: {{ satellite_verify_ssl }}"
+      "- content_view: {{ item.0.name }}"
+      "- organization: {{ item.1.name }}"
+      "- version: {{ cv_default_ver }}"
+      "- lifecycle_environments: {{ item.1.lifecycle_environments.0.name }}"
+  debug:
+    msg: "{{ msg }}"
+    verbosity: 2
+  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
+  loop_control:
+    label: "{{ item.0.name }}"
+  tags: [katello,cv]
+
+
 - name: "ensure version one of the content view is in all specified lifecyle environments"
-  katello_content_view_version:
+  theforeman.foreman.katello_content_view_version:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
@@ -70,14 +90,16 @@
     content_view: "{{ item.0.name }}"
     organization: "{{ item.1.name }}"
     version: "{{ cv_default_ver }}"
-    lifecycle_environments: "{{ item.1.lifecycle_environments }}"
+    lifecycle_environments: "{{ item.1.lifecycle_environments.0.name }}"
   loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
   loop_control:
     label: "{{ item.0.name }}"
   tags: [katello,cv]
 
+- meta: end_play
+
 - name: create/update Activation Keys
-  katello_activation_key:
+  theforeman.foreman.katello_activation_key:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
@@ -96,7 +118,7 @@
   tags: [katello,ak]
 
 - name: setup syncplan
-  katello_sync_plan:
+  theforeman.foreman.katello_sync_plan:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"

@@ -15,9 +15,7 @@ rhel8_ak:
   - name: "act-os-rhel-8Server"
     lifecycle_environment: "Library"
     content_view: 'cv-os-rhel8'
-    subscriptions:
-      #- name: "Red Hat Enterprise Linux Server, Standard (1 Virtual Node)"
-      - name: "{{ default_subscription }}"
+    subscriptions: "{{ default_subscription }}"
     content_overrides:
       - label: rhel-8-server-optional-rpms
         override: enabled

@@ -12,20 +12,18 @@ rhel8_product:
     product: &rhel8 "Red Hat Enterprise Linux for x86_64"
     repositories:
       - releasever: "8"
-        basearch: "{{ arch }}"
   - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)"
     label: rhel-8-for-x86_64-appstream-rpms
     state: enabled
     product: *rhel8
     repositories:
       - releasever: "8"
-        basearch: "{{ arch }}"
   - name: "Red Hat Satellite Tools 6.5 for RHEL 8 x86_64 (RPMs)"
     label: satellite-tools-6.5-for-rhel-8-x86_64-rpms
     state: enabled
     product: *rhel8
     repositories:
-      - releasever: "8"
+      - releasever: "8.0"
         basearch: "{{ arch }}"
   - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary (RPMs)"
     label: rhel-8-for-x86_64-supplementary-rpms
@@ -33,21 +31,18 @@ rhel8_product:
     product: *rhel8
     repositories:
       - releasever: "8"
-        basearch: "{{ arch }}"
   - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream (Kickstart)"
     label: rhel-8-for-x86_64-appstream-kickstart
     state: enabled
     product: *rhel8
     repositories:
-      - releasever: "8"
-        basearch: "{{ arch }}"
+      - releasever: "8.0"
   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Kickstart)"
     label: rhel-8-for-x86_64-baseos-kickstart
     state: enabled
     product: *rhel8
     repositories:
-      - releasever: "8"
-        basearch: "{{ arch }}"
+      - releasever: "8.0"
 
 rhel7_product:
   - name: "Red Hat Enterprise Linux 7 Server (RPMs)"

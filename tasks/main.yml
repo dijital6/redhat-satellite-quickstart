@@ -59,21 +59,3 @@
 - name: create/update domains
   import_tasks: "{{ role_path }}/tasks/provision.yml"
   tags: [provision,domains,subnets,compute]
-
-#*******************************************#
-# ABOVE THIS LINE WORKS                     #
-#############################################
-
-#- import_tasks: "{{ role_path }}/tasks/settings.yml"
-#  tags:
-#    -  settings
-#    - repository
-
-# Tasks below here should be deleted
-#- name: getting organizaitons for lifecycle environments
-#  include_tasks: lifecyle_env.yml
-#  loop: "{{ satellite_orgs }}"
-#  loop_control:
-#    loop_var: outer_item
-#    label: outer_item.name
-#  tags: [katello,lcenv]

@@ -56,9 +56,9 @@
     label: "{{ product_item }}"
   tags: [katello,sync_plans,repo,cv,ak]
 
-#- name: create/update domains
-#  import_tasks: "{{ role_path }}/tasks/provision.yml"
-#  tags: [provision,domains,subnets,compute]
+- name: create/update domains
+  import_tasks: "{{ role_path }}/tasks/provision.yml"
+  tags: [provision,domains,subnets,compute]
 
 #*******************************************#
 # ABOVE THIS LINE WORKS                     #

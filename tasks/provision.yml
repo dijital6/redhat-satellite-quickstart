@@ -1,75 +1,83 @@
 ---
 - name: Create Domains
-  foreman_domain:
+  theforeman.foreman.foreman_domain:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
-    name: "{{ item.name }}"
-    organizations: "{{ item.orgs | default(omit) }}"
-    locations: "{{ item.locations | default(omit) }}"
-    dns_proxy: "{{ item.proxy | default(omit) }}"
-    state: "{{ item.state | default(omit) }}"
-    description: "{{ item.desc | default(omit) }}"
-  with_items: "{{ domains }}"
+    name: "{{ item.1.name }}"
+    organizations: "{{ item.1.organizations | default(omit) }}"
+    locations: "{{ item.1.locations | default(omit) }}"
+    dns_proxy: "{{ item.1.proxy | default(omit) }}"
+    state: "{{ item.1.state | default(omit) }}"
+    description: "{{ item.1.description | default(omit) }}"
+  when: satellite_orgs.0.domains
+  with_subelements:
+    - "{{ satellite_orgs }}"
+    - domains
   loop_control:
-    label: "{{ item.name }}"
-  when: domains is defined
+    label: "{{ item.1.name }}"
+  tags: [provision,domain]
 
 - name: creating subnets
-  foreman_subnet:
+  theforeman.foreman.foreman_subnet:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
-    name: "{{ item.name }}"
-    network: "{{ item.network }}"
-    network_type: "{{ item.network_type | default(omit) }}"
-    mask: "{{ item.mask | default(omit) }}"
-    gateway: "{{ item.gateway | default(omit) }}"
-    from_ip: "{{ item.from_ip | default(omit) }}"
-    to_ip: "{{ item.to_ip | default(omit) }}"
-    boot_mode: "{{ item.boot_mode | default(omit) }}"
-    dns_primary: "{{ item.dns1 | default(omit) }}"
-    dns_secondary: "{{ item.dns2 | default(omit) }}"
-    domains: "{{ item.domains | default(omit) }}"
-    dhcp_proxy: "{{ item.dhcp_proxy | default(omit) }}"
-    tftp_proxy: "{{ item.tftp_proxy | default(omit) }}"
-    dns_proxy: "{{ item.dns_proxy | default(omit) }}"
-    remote_execution_proxies: "{{ item.remote_exec_proxy | default(omit) }}"
-    vlanid: "{{ item.vlanid | default(omit) }}"
-    mtu: "{{ item.mtu | default(omit) }}"
-    ipam: "{{ item.ipam | default(omit) }}"
-    organizations: "{{ item.organizations | default(omit) }}"
-    locations: "{{ item.locations | default(omit) }}"
-    state: "{{ item.state }}"
-  with_items: "{{ subnets }}"
+    name: "{{ item.1.name }}"
+    network: "{{ item.1.network }}"
+    network_type: "{{ item.1.network_type | default(omit) }}"
+    mask: "{{ item.1.mask | default(omit) }}"
+    gateway: "{{ item.1.gateway | default(omit) }}"
+    from_ip: "{{ item.1.from_ip | default(omit) }}"
+    to_ip: "{{ item.1.to_ip | default(omit) }}"
+    boot_mode: "{{ item.1.boot_mode | default(omit) }}"
+    dns_primary: "{{ item.1.dns1 | default(omit) }}"
+    dns_secondary: "{{ item.1.dns2 | default(omit) }}"
+    domains: "{{ item.1.domains | default(omit) }}"
+    dhcp_proxy: "{{ item.1.dhcp_proxy | default(omit) }}"
+    tftp_proxy: "{{ item.1.tftp_proxy | default(omit) }}"
+    dns_proxy: "{{ item.1.dns_proxy | default(omit) }}"
+    remote_execution_proxies: "{{ item.1.remote_exec_proxy | default(omit) }}"
+    vlanid: "{{ item.1.vlanid | default(omit) }}"
+    mtu: "{{ item.1.mtu | default(omit) }}"
+    ipam: "{{ item.1.ipam | default(omit) }}"
+    organizations: "{{ item.1.organizations | default(omit) }}"
+    locations: "{{ item.1.locations | default(omit) }}"
+    state: "{{ item.1.state }}"
+  when: satellite_orgs.0.domains
+  with_subelements:
+    - "{{ satellite_orgs }}"
+    - subnets
   loop_control:
-    label: "{{ item.name }}" 
-  when: subnets is defined
+    label: "{{ item.1.name }}"
+  tags: [provision,subnets]
 
 - name: create/update compute resource
-  foreman_compute_resource:
+  theforeman.foreman.foreman_compute_resource:
     username: "{{ satellite_admin_user }}"
     password: "{{ satellite_user_pass }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
-    name: "{{ item.name }}"
-    organizations: "{{ item.orgs | default(omit) }}"
-    locations: "{{ item.locations | default(omit) }}"
-    state: "{{ item.state | default(omit) }}"
-    description: "{{ item.desc | default(omit) }}"
-    provider: "{{ item.provider | default(omit) }}" 
+    name: "{{ item.1.name }}"
+    organizations: "{{ item.1.organizations | default(omit) }}"
+    locations: "{{ item.1.locations | default(omit) }}"
+    state: "{{ item.1.state | default(omit) }}"
+    description: "{{ item.1.desc | default(omit) }}"
+    provider: "{{ item.1.provider | default(omit) }}"
     provider_params:
-      url: "{{ item.provider_url | default(omit) }}"
-      user: "{{ item.provider_user | default(omit) }}"
-      password: "{{ item.provider_pass | default(omit) }}"
-      datacenter: "{{ item.datacenter | default(omit) }}"
-      ovirt_quota: "{{ item.ovirt_quota | default(omit) }}"
-      use_v4: "{{ item.ovirt_v4_api | default(omit) }}"
-      set_console_password: "{{ item.console_pass | default(omit) }}"
-      display_type: "{{ item.display_type | default(omit) }}"
-  with_items: "{{ compute_resource }}"
+      url: "{{ item.1.provider_params.url | default(omit) }}"
+      user: "{{ item.1.provider_params.user | default(omit) }}"
+      password: "{{ item.1.provider_params.pass | default(omit) }}"
+      datacenter: "{{ item.1.provider_params.datacenter | default(omit) }}"
+      ovirt_quota: "{{ item.1.provider_params.ovirt_quota | default(omit) }}"
+      use_v4: "{{ item.1.provider_params.ovirt_v4_api | default(omit) }}"
+      display_type: "{{ item.1.provider_params.display_type | default(omit) }}"
+  when: satellite_orgs.0.compute_resource
+  with_subelements:
+    - "{{ satellite_orgs }}"
+    - compute_resource
   loop_control:
-    label: "{{ item.name }}"
-  when: compute_resource is defined
+    label: "{{ item.1.name }}"
+  tags: [provision,compute]

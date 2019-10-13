@@ -1,24 +1,3 @@
-#- name: create/update lifecycle environments
-#  theforeman.foreman.katello_lifecycle_environment:
-#    username: "{{ satellite_admin_user }}"
-#    password: "{{ satellite_user_pass }}"
-#    server_url: "{{ satellite_url }}"
-#    validate_certs: "{{ satellite_verify_ssl }}"
-#    description: "{{ item.desc | default('') }}"
-#    label: "{{ item.name }}"
-#    name: "{{ item.name }}"
-#    organization: "{{ outer_item.name }}"
-#    prior: "{{ item.prior }}"
-#    state: "{{ item.state | default(omit) }}"
-#  loop: "{{ lifecycle_environments }}"
-#  with_subelements:
-#    - "{{ satellite_orgs }}"
-#    - lifecycle_environments
-#  loop_control:
-#    label: "{{ item.name }}"
-#  tags: [katello,lcenv]
-
-
 - name: create/update lifecycle environments
   theforeman.foreman.katello_lifecycle_environment:
     username: "{{ satellite_admin_user }}"

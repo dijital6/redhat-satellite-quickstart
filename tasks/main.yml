@@ -48,14 +48,14 @@
   tags: [katello,lcenv]
 
 
-#- name: setup up Satellite content
-#  include_tasks: configure_content.yml
-#  loop: "{{ rhel_product }}"
-#  loop_control:
-#    loop_var: product_item
-#    label: "{{ product_item }}"
-#  tags: [katello,sync_plans,repo,cv,ak]
-#
+- name: setup up Satellite content
+  include_tasks: configure_content.yml
+  loop: "{{ rhel_product }}"
+  loop_control:
+    loop_var: product_item
+    label: "{{ product_item }}"
+  tags: [katello,sync_plans,repo,cv,ak]
+
 #- name: create/update domains
 #  import_tasks: "{{ role_path }}/tasks/provision.yml"
 #  tags: [provision,domains,subnets,compute]

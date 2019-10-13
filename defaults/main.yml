@@ -43,7 +43,7 @@ arch: x86_64
 satellite_version: 6.5
 
 # Promoting content views default values
-cv_default_ver: 1.0
+cv_default_ver: "1.0"
 cv_default_lc: Library
 
 

@@ -96,8 +96,6 @@
     label: "{{ item.0.name }}"
   tags: [katello,cv]
 
-- meta: end_play
-
 - name: create/update Activation Keys
   theforeman.foreman.katello_activation_key:
     username: "{{ satellite_admin_user }}"
@@ -129,14 +127,12 @@
     enabled: "{{ item.1.enabled }}"
     sync_date: "{{ item.1.date }}"
     #cron_expression:
-    #description: "{{ item.1.description }}"
+    description: "{{ item.1.description }}"
     products: "{{ sync_plan_products }}"
   with_subelements:
     - "{{ satellite_orgs }}"
     - sync_plans
   loop_control:
     label: "{{ sync_plan_products }}"
-  #when: configure_katello_sync_plans
-  when: products_enabled.changed
   tags: [katello,sync_plans]
 

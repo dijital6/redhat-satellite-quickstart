@@ -136,3 +136,9 @@
     label: "{{ sync_plan_products }}"
   tags: [katello,sync_plans]
 
+- name: import sync tasks
+  import_tasks: "{{ role_path }}/tasks/sync.yml"
+  when: item.0.sync_right_away
+  tags: [katello,sync]
+
+

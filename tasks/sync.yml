@@ -1,0 +1,47 @@
+---
+- name: get all repositories
+  theforeman.foreman.foreman_search_facts:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_verify_ssl }}"
+    resource: repositories
+  register: repositories
+  tags: [katello,sync]
+
+- name: sync product repository
+  vars:
+    product_org: "{{ item.1.name }}"
+    product_name: "{{ item.0.product.name }}"
+    product_repo: "{{ item.0.name }}"
+  theforeman.foreman.katello_sync:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_verify_ssl }}"
+    organization: "{{ product_org }}"
+    product: "{{ product_name }}"
+    repository:  "{{ product_repo }}"
+  loop: "{{ repositories.resources|product(satellite_orgs)|list }}"
+  loop_control:
+    label: "{{ item.0.product.name }}"
+  when: item.0.url
+  async: 999999
+  poll: 0
+  register: repo_sync_sleeper
+  tags: [katello,repo,sync_plans] 
+
+- name: Wait until all Syncs have finished
+  async_status:
+    jid: "{{ repo_sync_sleeper_item.ansible_job_id }}"
+  loop: "{{ repo_sync_sleeper.results }}"
+  loop_control:
+    loop_var: repo_sync_sleeper_item
+  when: repo_sync_sleeper_item.ansible_job_id is defined  # Skip items that were skipped in the previous task
+  register: async_job_result
+  until: async_job_result.finished
+  # We want to give ourselves a maximum of 6 hours. The timer resets every
+  # time an async job completes, and if you've not completed at least one
+  # repo after 6 hours, you have bandwidth issues.
+  retries: 2160
+  delay: 10

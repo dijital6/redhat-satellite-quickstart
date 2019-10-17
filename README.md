@@ -38,28 +38,17 @@ Requirements
 ------------
 Requires:
 
-1. [Ansible Modules](https://github.com/theforeman/foreman-ansible-modules)
-2. [Nailgun](https://github.com/SatelliteQE/#nailgun.git@master#egg=nailgun)
-3. Packages: python-pip, python-six, pytz, python-netaddr
-4. EPEL: provides python-pip on RHEL 7
+- [Ansible Modules](https://github.com/theforeman/foreman-ansible-modules)
 
-Items 2-4 can be setup by setting the variable `configure_katello_nailgun_install`to true.
+**Installation Steps**
 
-This was tested using the 
-
-**Nailgun install manual steps on RHEL 7**
-
-Nailgun is installed on the Satellite server.
+Currently using the collections via Copr.
 
 ```
-sudo yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-sudo yum-config-manager --disable epel
-sudo yum install python2-pip --enablerepo="epel"
-sudo pip install git+https://github.com/SatelliteQE/nailgun.git@master#egg=nailgun
-#sudo pip install apypie
-sudo yum install python-six pytz python-netaddr
+sudo wget https://copr.fedorainfracloud.org/coprs/evgeni/foreman-ansible-modules/repo/epel-7/ -O /etc/yum.repos.d/evgeni-foreman-ansible-modules-epel-7.repo
+sudo yum install -y ansible-collection-theforeman-foreman
 ```
-Note: This role was developed using the nailgun branch of the foreman-ansible-modules make sure you checkout this branch.
+Note: The above step needs to be done on both the Satellite server and your control node.
 
 Role Variables
 --------------

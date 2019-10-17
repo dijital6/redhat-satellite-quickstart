@@ -28,7 +28,7 @@ Products and Content Views
 Currently supported products:
 
 - ansible
-- rhel8 (broken) - you have to manually enable the repos, everything else works.
+- rhel8 
 - rhel7
 - osp14
 - ceph3
@@ -111,54 +111,103 @@ How to find your subscription pool:
 4. Select the subscription number
 
 ```
-- name: PLAY| setup organization and location with a manifest from RHSM and enable RHEL7 and Ansible products
   hosts: sat01
   remote_user: root
-  become: false
+  become: true
   gather_facts: true
   vars:
-    satellite_admin_user: "{{ satellite_user }}"
-    satellite_user_pass: "{{ satellite_pass }}"
-    satellite_url: "https://{{ satellite_hostname }}.{{ satellite_domain }}"
+    satellite_admin_user: admin
+    satellite_user_pass: password
+    satellite_url: https://sat01.example.com
     satellite_verify_ssl: no
-    rhsm_password: "{{ vault_rhsm_pass }}"
-    rhsm_user: "{{ vault_rhsm_user }}"
+    rhsm_password: username
+    rhsm_user: password
     manifest_download_path: /root
-    default_subscription: 
+    local_manifest_path: ""
+    default_subscription:
       - name: "Red Hat Cloud Suite (2-sockets), Premium"
     satellite_orgs:
-      - name: MyORG
+      - name: CloudTeam
         state: present
-        manifest: MyORGSatelliteManifest
+        manifest: ""
         manifest_state: present
         manifest_force_upload: False
+        sync_right_away: True
         use_local_manifest: False
         cdn_url: https://cdn.redhat.com
+        wait_for_respo_sync: false
         pool:
           - id: 8a85f99b6977b7c0016979464ee772cb
             pool_state: present
             quantity: 7
         location:
-          - name: MyLocation
+          - name: Clearwater
             state: present
         products:
           - rhel7
+          - rhel8
           - ansible
         lifecycle_environments:
-          - Library
-          - Dev
-          - QA
-          - Production
+          - name: Dev
+            prior: Library
+            state: present
+            description: Dev environment
+          - name: QA
+            prior: Dev
+            state: present
+            description: QA environment
+          - name: Production
+            prior: QA
+            state: present
+            description: Production environment
         sync_plans:
           - name: "Red Hat Sync Plan"
-            date: "2019/06/16 00:00:00 +0000"
+            date: "2019/10/09 00:00:00 +0000"
             interval: daily
             enabled: true
             description: "Sync Plan for Red Hat products"
+        domains:
+          - name: example.com
+            locations:
+              - Clearwater
+            organizations:
+              - ACME
+              - CloudTeam
+            state: present
+            description: example.com
+        subnets:
+          - name: lunchnet
+            locations:
+              - Clearwater
+            organizations:
+              - CloudTeam
+            network: 192.24.24.0
+            mask: 255.255.255.0
+            gateway: 192.24.24.1
+            from_ip: 192.24.24.200
+            to_ip: 192.24.24.205
+            domains:
+              - example.com
+            state: present
+            description: 192.24.24.0
+        compute_resource:
+          - name: lunchnet
+            locations:
+              - Clearwater
+            organizations:
+              - CloudTeam
+            state: present
+            provider: libvirt
+            provider_params:
+              url: qemu+ssh://root@kvmhost/system
+              display_type: vnc
+            description: KVM Compute Host
+  collections:
+    - theforeman.foreman
 
   tasks:
   - name: TASK| runnning ansible-role-configure-katello
     include_role:
-      name: ansible-role-configure-katello
+      name: satellite-day-two-ops
     tags: [always,manifest]
 ```

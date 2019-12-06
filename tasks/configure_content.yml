@@ -136,9 +136,16 @@
     label: "{{ sync_plan_products }}"
   tags: [katello,sync_plans]
 
-- name: import sync tasks
-  import_tasks: "{{ role_path }}/tasks/sync.yml"
-  when: item.0.sync_right_away
+- name: get sync action
+  set_fact:
+    sync_now: "{{ item.1.sync_right_away }}"
+  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
+  loop_control:
+    label: "{{ item.0.name }}"
   tags: [katello,sync]
 
+- name: import sync tasks
+  import_tasks: "{{ role_path }}/tasks/sync.yml"
+  when: sync_now
+  tags: [katello,sync]
 

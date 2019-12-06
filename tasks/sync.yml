@@ -9,6 +9,7 @@
   register: repositories
   tags: [katello,sync]
 
+
 - name: sync product repository
   vars:
     product_org: "{{ item.1.name }}"

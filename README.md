@@ -40,7 +40,7 @@ Requires:
 
 - [Ansible Modules](https://github.com/theforeman/foreman-ansible-modules)
 
-**Installation Steps**
+**Install the Foreman Ansible Modules collection on the control node**
 
 Currently using the collections via Copr.
 
@@ -48,7 +48,6 @@ Currently using the collections via Copr.
 sudo wget https://copr.fedorainfracloud.org/coprs/evgeni/foreman-ansible-modules/repo/epel-7/ -O /etc/yum.repos.d/evgeni-foreman-ansible-modules-epel-7.repo
 sudo yum install -y ansible-collection-theforeman-foreman
 ```
-Note: The above step needs to be done on both the Satellite server and your control node.
 
 Role Variables
 --------------
@@ -85,6 +84,11 @@ You will need to edit ```defaults/activation_keys.yml``` with your subscription 
 
 For conveince, the variable *default_subscription* can be set instead of editing ```defaults/activation_keys.yml```. This is useful if you have an subscription or a subscription that bundles lots of products like the one use in the example below.
 
+**Installation**
+
+```
+ansible-galaxy install git+https://github.com/flyemsafe/satellite-day-two-ops.git
+```
 Example Playbook
 ----------------
 

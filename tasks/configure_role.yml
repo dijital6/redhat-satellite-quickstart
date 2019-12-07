@@ -1,0 +1,53 @@
+---
+- name: create satellite role
+  theforeman.foreman.foreman_role:
+    username: "{{ satellite_admin_user }}"
+    password: "{{ satellite_user_pass }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_verify_ssl }}"
+    name: "{{ role_name }}"
+    description: "{{ role_description }}"
+    state: "{{ role_state }}"
+    filters: "{{ role_filters }}"
+    organizations:
+      - "{{ item.0.name }}"
+    locations:
+      - "{{ item.1.name }}"
+  with_subelements:
+    - "{{ satellite_orgs }}"
+    - location
+  loop_control:
+    label: "{{ item.1.name }}"
+  tags: [katello,role]
+  when: role_state == "present"
+
+#- name: create user for role
+#  theforeman.foreman.foreman_user:
+#    username: "{{ satellite_admin_user }}"
+#    password: "{{ satellite_user_pass }}"
+#    server_url: "{{ satellite_url }}"
+#    validate_certs: "{{ satellite_verify_ssl }}"
+#    login: "{{ addtl_username }}"
+#    firstname: "{{ addtl_firstname }}"
+#    lastname: "{{ addtl_lastname }}"
+#    description: "{{ addtl_description }}"
+#    admin: "{{ addtl_admin }}"
+#    user_password: "{{ addtl_password }}"
+#    default_location: "{{ item.1.name }}"
+#    default_organization: "{{ item.0.name }}"
+#    state: "{{ addtl_state }}"
+#    roles:
+#      - "{{ role_name }}"
+#    auth_source: Internal
+#    organizations:
+#      - "{{ item.0.name }}"
+#    locations:
+#      - "{{ item.1.name }}"
+#  with_subelements:
+#    - "{{ satellite_orgs }}"
+#    - location
+#  loop_control:
+#    label: "{{ item.1.name }}"
+#  tags: [katello,role]
+#  when: addtl_state == "present"
+#  

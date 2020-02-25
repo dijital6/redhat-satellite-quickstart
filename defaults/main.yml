@@ -63,10 +63,15 @@ satellite_orgs:
     products:
       - rhel7
     lifecycle_environments:
-      - Library
-      - Dev
-      - QA
-      - Production
+      - name: Dev
+        prior: Library
+        state: present
+      - name: QA
+        prior: Dev
+        state: present
+      - name: Production
+        prior: QA
+        state: present
     sync_plans:
       - name: "Red Hat Sync Plan"
         date: "2019/06/16 00:00:00 +0000"

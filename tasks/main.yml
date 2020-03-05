@@ -1,21 +1,21 @@
 ---
-- name: enable foreman ansible module repo on control node
-  import_tasks: fam_collections_repo.yml
-  delegate_to: 127.0.0.1
-
-- name: enable foreman ansible module repo on satellite host
-  include_tasks: fam_collections_repo.yml
-
-- name: install required package python apypie
-  command: foreman-maintain packages install -y python2-apypie
-  args:
-    creates: /usr/lib/python2.7/site-packages/apypie
-
-- name: install foreman ansible module on control node
-  yum:
-    name: ansible-collection-theforeman-foreman
-    state: present
-  delegate_to: 127.0.0.1
+#- name: enable foreman ansible module repo on control node
+#  import_tasks: fam_collections_repo.yml
+#  delegate_to: 127.0.0.1
+#
+#- name: enable foreman ansible module repo on satellite host
+#  include_tasks: fam_collections_repo.yml
+#
+#- name: install required package python apypie
+#  command: foreman-maintain packages install -y python2-apypie
+#  args:
+#    creates: /usr/lib/python2.7/site-packages/apypie
+#
+#- name: install foreman ansible module on control node
+#  yum:
+#    name: ansible-collection-theforeman-foreman
+#    state: present
+#  delegate_to: 127.0.0.1
 
 - name: include satellite content views variables
   include_vars: "../vars/satellite_content_views.yml"

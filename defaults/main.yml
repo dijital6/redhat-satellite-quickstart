@@ -3,11 +3,6 @@
 # - /home/rheron/Playbooks/group_vars/satellite/configure_katello.yml
 # - 4/25/2019
 
-
-# install nailgun package
-configure_katello_nailgun_package: "git+https://github.com/SatelliteQE/nailgun.git@master#egg=nailgun"
-configure_katello_nailgun_install: true
-
 # Satellite server credentials
 satellite_admin_user: admin
 satellite_user_pass: "{{ vault_katello_admin_password | default('changeme') }}"
@@ -15,8 +10,8 @@ satellite_url: "https://{{ inventory_hostname }}"
 satellite_verify_ssl: false
 
 # Satellite manifest
-force_manifest_upload: false # set to true to always upload manifest
-local_manifest_path: ""            # set path to dump downloaded manifest
+force_manifest_upload: false         # set to true to always upload manifest
+local_manifest_path: ""              # set path to dump downloaded manifest
 rhsm_verify_ssl: false               # the default false works
 
 # Configure satellite to use a proxy
@@ -40,7 +35,7 @@ jboss_major: 7
 jboss_minor: 2
 osp_major: 14
 arch: x86_64
-satellite_version: 6.5
+satellite_version: 6.6
 
 # Promoting content views default values
 cv_default_ver: "1.0"
@@ -51,7 +46,7 @@ cv_default_lc: Library
 satellite_orgs:
   - name: ACME
     state: present
-    manifest: Satellite_All_Latest
+    manifest: Satellite_All_Latest #name of your Satellite manifest
     cdn_url: https://cdn.redhat.com
     pool:   # this is required for attaching subs to a manifest on RHSM
       - id: 999
@@ -111,7 +106,7 @@ subnets:
     - "Example Org"
     locations:
     - "Toulouse"
-    state: present  
+    state: present
 
 domains:
   - name: ""  #required

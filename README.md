@@ -1,21 +1,18 @@
-Red Hat Satellite 6 Day Two Ops
+Red Hat Satellite 6 Quick Start
 ===============================
 
-:warning: Work in progress.
+This role will configure your Satellite server using the foreman-ansible-modules. It models the [10 Steps to Build an SOE: How Red Hat Satellite 6 Supports Setting up a Standard Operating Environment](https://access.redhat.com/articles/1585273).
 
-This role configures your Satellite:
+This role does the following:
 
- - Create organizations
- - Uploads manifest
+ - Create your organization(s)
+ - Adds a manfiest to the organization
  - Creates locations
- - Create sync plans
- - Create contentveiws
- - Enables products
+ - Create a sync plans
+ - Create content veiws
+ - Enables Red Hat products
  - Create life cycle environments
 
-It's base on work I started here [my-satellite-post-config](https://github.com/flyemsafe/my-satellite-post-config)
-
-A goal of this role is quickly setup Satellite for Day-2 operations leveraging the foreman-ansible-modules. This role will model the [10 Steps to Build an SOE: How Red Hat Satellite 6 Supports Setting up a Standard Operating Environment](https://access.redhat.com/articles/1585273).
 
 Products and Content Views
 --------------------------
@@ -28,11 +25,10 @@ Products and Content Views
 Currently supported products:
 
 - ansible
-- rhel8 
+- rhel8
 - rhel7
 - osp14
 - ceph3
-
 
 Requirements
 ------------
@@ -79,7 +75,7 @@ This role is built around enabling the Red Hat products you have a subscription 
 
 **Subscriptions**
 
-By default actication keys are created without any associated activation keys. 
+By default actication keys are created without any associated activation keys.
 You will need to edit ```defaults/activation_keys.yml``` with your subscription details for each activation key you want created.
 
 For conveince, the variable *default_subscription* can be set instead of editing ```defaults/activation_keys.yml```. This is useful if you have an subscription or a subscription that bundles lots of products like the one use in the example below.

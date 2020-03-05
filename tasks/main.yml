@@ -17,7 +17,6 @@
   block:
     - name: enable foreman ansible module repo on satellite host
       include_tasks: fam_collections_repo.yml
-      tags: [apypie]
 
     - name: install required package python apypie
       command: foreman-maintain packages install -y python2-apypie

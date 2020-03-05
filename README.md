@@ -60,6 +60,8 @@ satellite_user_pass|:heavy_check_mark: |null|satellite admin password
 satellite_url|:heavy_check_mark: |null|satellite server url https://satellite.com
 satellite_verify_ssl|:x:|no|"default is to use basic auth
 force_manifest_upload|:x:|false|force the upload of a manifest to Satellite
+foreman_ansible_module|:x:|no|set to yes to install the foreman-ansible-module on the ansible contoller
+install_apypie|:x:|no|set to yes to install the python apypie module rpm on the Satellite server
 
 How To Use This Role
 --------------------

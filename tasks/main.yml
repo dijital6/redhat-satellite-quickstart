@@ -70,6 +70,6 @@
   import_tasks: "{{ role_path }}/tasks/provision.yml"
   tags: [provision,domains,subnets,compute]
 
-- name: create satellite role
-  import_tasks: configure_role.yml
-  tags: [katello,role]
+#- name: create satellite role
+#  import_tasks: configure_role.yml
+#  tags: [katello,role]

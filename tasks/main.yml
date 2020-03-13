@@ -1,4 +1,9 @@
 ---
+# https://github.com/jjaswanson4/satellite6-deployment/blob/satellite6.6/roles/setup-for-satellite/tasks/pre-flight-checklist.yml
+- name: ensure the satellite server meets the documented requirements
+  include_tasks: pre-flight-checklist.yml
+  when: check_requirements
+
 - name: install foreman-ansible-module on the control node
   block:
     - name: enable foreman ansible module repo on control node

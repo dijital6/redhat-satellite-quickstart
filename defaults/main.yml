@@ -27,6 +27,9 @@ foreman_ansible_module: no
 # change to yes if you want to install the python module apypie rpm
 install_apypie: no
 
+# ensure the satellite server meeting the installation requirements
+check_requirements: yes
+
 # product variables
 
 # This only applies to RHEL 7 and 6

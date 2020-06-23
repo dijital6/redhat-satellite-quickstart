@@ -72,16 +72,16 @@ How To Use This Role
 This role is built around enabling the Red Hat products you have a subscription entitlement to. For each product or product group listed it will:
   - enable the product repository
   - create a content view or composite content
-  - promote the content view to Library
+  - publish the content view to Library
   - create corresponding activation key
   - create a sync plan
 
 **Subscriptions**
 
-By default actication keys are created without any associated activation keys.
+By default activation keys are created without any associated activation keys.
 You will need to edit ```defaults/activation_keys.yml``` with your subscription details for each activation key you want created.
 
-For conveince, the variable *default_subscription* can be set instead of editing ```defaults/activation_keys.yml```. This is useful if you have an subscription or a subscription that bundles lots of products like the one use in the example below.
+For convenience, the variable *default_subscription* can be set instead of editing ```defaults/activation_keys.yml```. This is useful if you have an subscription or a subscription that bundles lots of products like the one use in the example below.
 
 **Installation**
 

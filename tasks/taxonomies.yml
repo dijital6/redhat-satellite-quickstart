@@ -1,8 +1,8 @@
 ---
 - name: taxonomies | create Organizations
-  theforeman.foreman.foreman_organization:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
+  redhat.satellite.organization:
+    username: "{{ item.admin_username }}"
+    password: "{{ item.admin_password }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
     name: "{{ item.name }}"
@@ -13,19 +13,18 @@
   tags: [katello,taxonomies,org]
 
 - name: taxonomies | create locations
-  theforeman.foreman.foreman_location:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
+  redhat.satellite.location:
+    username: "{{ item.0.admin_username }}"
+    password: "{{ item.0.admin_password }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
     name: "{{ item.1.name }}"
     state: "{{ item.1.state }}"
-    #organizations: "{{ location_orgs }}"
     organizations:
       - "{{ item.0.name }}"
   with_subelements:
     - "{{ satellite_orgs }}"
-    - location
+    - locations
   loop_control:
     label: "{{ item.1.name }}"
   tags: [katello,taxonomies,location]

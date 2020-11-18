@@ -1,25 +1,25 @@
 ---
-- name: setup syncplan
-  theforeman.foreman.katello_sync_plan:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
-    server_url: "{{ satellite_url }}"
-    verify_ssl: "{{ satellite_verify_ssl }}"
-    name: "{{ item.1.name }}"
-    organization: "{{ item.0.name }}"
-    interval: "{{ item.1.interval }}"
-    enabled: "{{ item.1.enabled }}"
-    sync_date: "{{ item.1.date }}"
-    #cron_expression:
-    #description: "{{ item.1.description }}"
-    products: "{{ sync_plan_products }}"
-  with_subelements:
-    - "{{ satellite_orgs }}"
-    - sync_plans
-  loop_control:
-    label: "{{ sync_plan_products }}"
-  when: configure_katello_sync_plans
-  tags: [katello,sync_plans]
-
-- name: sync all repositories
-  include_tasks: "{{ role_path }}/handlers/sync_repositories.yml"
+#- name: setup syncplan
+#  theforeman.foreman.katello_sync_plan:
+#    username: "{{ satellite_admin_user }}"
+#    password: "{{ satellite_user_pass }}"
+#    server_url: "{{ satellite_url }}"
+#    verify_ssl: "{{ satellite_verify_ssl }}"
+#    name: "{{ item.1.name }}"
+#    organization: "{{ item.0.name }}"
+#    interval: "{{ item.1.interval }}"
+#    enabled: "{{ item.1.enabled }}"
+#    sync_date: "{{ item.1.date }}"
+#    #cron_expression:
+#    #description: "{{ item.1.description }}"
+#    products: "{{ sync_plan_products }}"
+#  with_subelements:
+#    - "{{ satellite_orgs }}"
+#    - sync_plans
+#  loop_control:
+#    label: "{{ sync_plan_products }}"
+#  when: configure_katello_sync_plans
+#  tags: [katello,sync_plans]
+#
+#- name: sync all repositories
+#  include_tasks: "{{ role_path }}/handlers/sync_repositories.yml"

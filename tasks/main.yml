@@ -1,34 +1,13 @@
 ---
-# https://github.com/jjaswanson4/satellite6-deployment/blob/satellite6.6/roles/setup-for-satellite/tasks/pre-flight-checklist.yml
-- name: ensure the satellite server meets the documented requirements
-  include_tasks: pre-flight-checklist.yml
-  when: check_requirements
+#- name: ensure the satellite server meets the documented requirements
+#  include_tasks: pre-flight-checklist.yml
+#  when: check_requirements
 
-- name: install foreman-ansible-module on the control node
-  block:
-    - name: enable foreman ansible module repo on control node
-      import_tasks: fam_collections_repo.yml
-      delegate_to: 127.0.0.1
-
-    - name: install foreman-ansible-module
-      yum:
-        name: ansible-collection-theforeman-foreman
-        state: present
-      delegate_to: 127.0.0.1
-  when: foreman_ansible_module|bool
-  tags: [fam]
-
-- name: install the apypie python module on Satellite
-  block:
-    - name: enable foreman ansible module repo on satellite host
-      include_tasks: fam_collections_repo.yml
-
-    - name: install required package python apypie
-      command: foreman-maintain packages install -y python2-apypie
-      args:
-        creates: /usr/lib/python2.7/site-packages/apypie
-  when: install_apypie|bool
-  tags: [apypie]
+- name: install required package python apypie
+  command: foreman-maintain packages install -y python2-apypie
+  args:
+    creates: /usr/lib/python2.7/site-packages/apypie
+  delegate_to: "{{ satellite_server_inventory_name }}"
 
 - name: include satellite content views variables
   include_vars: "../vars/satellite_content_views.yml"
@@ -50,31 +29,27 @@
   import_tasks: "{{ role_path }}/tasks/manifest.yml"
   tags: [katello,manifest]
 
-- name: build list of all products
-  set_fact:
-    rhel_product: "{{ rhel_product  }} + [ '{{ item }}' ]"
-  loop: "{{ satellite_orgs.0.products }}"
-  loop_control:
-    label: "{{ item }}"
-  when: item + '_product' in hostvars[inventory_hostname]
-  tags: [katello,repo,cv,ak,sync_plans]
-
-- name: create lifecycle environments
-  import_tasks: "{{ role_path }}/tasks/lifecyle_env.yml"
-  tags: [katello,lcenv]
-
-- name: setup up Satellite content
-  include_tasks: configure_content.yml
-  loop: "{{ rhel_product }}"
-  loop_control:
-    loop_var: product_item
-    label: "{{ product_item }}"
-  tags: [katello,sync_plans,repo,cv,ak]
-
-- name: create/update domains
-  import_tasks: "{{ role_path }}/tasks/provision.yml"
-  tags: [provision,domains,subnets,compute]
-
-#- name: create satellite role
-#  import_tasks: configure_role.yml
-#  tags: [katello,role]
+#- name: build list of all products
+#  set_fact:
+#    rhel_product: "{{ rhel_product  }} + [ '{{ item }}' ]"
+#  loop: "{{ satellite_orgs.0.products }}"
+#  loop_control:
+#    label: "{{ item }}"
+#  when: item + '_product' in hostvars[inventory_hostname]
+#  tags: [katello,repo,cv,ak,sync_plans]
+#
+#- name: create lifecycle environments
+#  import_tasks: "{{ role_path }}/tasks/lifecyle_env.yml"
+#  tags: [katello,lcenv]
+#
+#- name: setup up Satellite content
+#  include_tasks: configure_content.yml
+#  loop: "{{ rhel_product }}"
+#  loop_control:
+#    loop_var: product_item
+#    label: "{{ product_item }}"
+#  tags: [katello,sync_plans,repo,cv,ak]
+#
+#- name: create/update domains
+#  import_tasks: "{{ role_path }}/tasks/provision.yml"
+#  tags: [provision,domains,subnets,compute]

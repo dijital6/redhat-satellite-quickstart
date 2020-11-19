@@ -1,7 +1,7 @@
 - name: create/update lifecycle environments
-  theforeman.foreman.katello_lifecycle_environment:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
+  redhat.satellite.lifecycle_environment:
+    username: "{{ item.0.admin_username }}"
+    password: "{{ item.0.admin_password }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
     name: "{{ item.1.name }}"

@@ -10,15 +10,25 @@ rhel7_ak:
         override: enabled
     auto_attach: False
     create: True
+    #content_overrides:
+    #host_collections: []
+    #release_version: 7Server
+    #service_level: Standard
+    #max_hosts
+    #purpose_addons
+    #purpose_role
+    #purpose_usage
+    #release_version
+    #unlimited_hosts
 
 rhel8_ak:
   - name: "act-os-rhel-8Server"
     lifecycle_environment: "Library"
     content_view: 'cv-os-rhel8'
     subscriptions: "{{ default_subscription }}"
-    content_overrides:
-      - label: rhel-8-server-optional-rpms
-        override: enabled
+    #content_overrides:
+    #  - label: rhel-8-server-optional-rpms
+    #    override: enabled
     auto_attach: False
     create: True
 

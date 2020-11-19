@@ -1,36 +1,38 @@
 ---
 - name: get all repositories
-  theforeman.foreman.foreman_search_facts:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
+  redhat.satellite.resource_info:
+    username: "{{ item.admin_username }}"
+    password: "{{ item.admin_password }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
     resource: repositories
   register: repositories
   tags: [katello,sync]
-
+  loop: "{{ satellite_orgs }}"
+  loop_control:
+    label: "{{ item.name }}"
 
 - name: sync product repository
   vars:
     product_org: "{{ item.1.name }}"
     product_name: "{{ item.0.product.name }}"
     product_repo: "{{ item.0.name }}"
-  theforeman.foreman.katello_sync:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
+  redhat.satellite.repository_sync:
+    username: "{{ item | json_query('[*].admin_username') | first }}"
+    password: "{{ item | json_query('[*].admin_password') | first }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
     organization: "{{ product_org }}"
     product: "{{ product_name }}"
     repository:  "{{ product_repo }}"
-  loop: "{{ repositories.resources|product(satellite_orgs)|list }}"
+  loop: "{{ repositories.results.0.resources|product(satellite_orgs)|list }}"
   loop_control:
     label: "{{ item.0.product.name }}"
   when: item.0.url
   async: 999999
   poll: 0
   register: repo_sync_sleeper
-  tags: [katello,repo,sync_plans] 
+  tags: [katello,repo,sync_plans]
 
 - name: Wait until all Syncs have finished
   async_status:

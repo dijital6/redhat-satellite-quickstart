@@ -21,6 +21,17 @@
   include_vars: "../defaults/activation_keys.yml"
   tags: [always]
 
+# this ensures the product the user is asking for is already defined
+# in vars/satellite_products.yml
+- name: build list of all products
+  set_fact:
+    rhel_product: "{{ rhel_product  }} + [ '{{ item }}' ]"
+  loop: "{{ satellite_orgs.0.products }}"
+  loop_control:
+    label: "{{ item }}"
+  when: item + '_product' in hostvars[inventory_hostname]
+  tags: [katello,repo,cv,ak,sync_plans]
+
 - name: create orgs and locations
   import_tasks: "{{ role_path }}/tasks/taxonomies.yml"
   tags: [katello,org,location,taxonomies]
@@ -29,27 +40,18 @@
   import_tasks: "{{ role_path }}/tasks/manifest.yml"
   tags: [katello,manifest]
 
-#- name: build list of all products
-#  set_fact:
-#    rhel_product: "{{ rhel_product  }} + [ '{{ item }}' ]"
-#  loop: "{{ satellite_orgs.0.products }}"
-#  loop_control:
-#    label: "{{ item }}"
-#  when: item + '_product' in hostvars[inventory_hostname]
-#  tags: [katello,repo,cv,ak,sync_plans]
-#
-#- name: create lifecycle environments
-#  import_tasks: "{{ role_path }}/tasks/lifecyle_env.yml"
-#  tags: [katello,lcenv]
-#
-#- name: setup up Satellite content
-#  include_tasks: configure_content.yml
-#  loop: "{{ rhel_product }}"
-#  loop_control:
-#    loop_var: product_item
-#    label: "{{ product_item }}"
-#  tags: [katello,sync_plans,repo,cv,ak]
-#
+- name: create lifecycle environments
+  import_tasks: "{{ role_path }}/tasks/lifecyle_env.yml"
+  tags: [katello,lcenv]
+
+- name: setup up Satellite content
+  include_tasks: configure_content.yml
+  loop: "{{ rhel_product }}"
+  loop_control:
+    loop_var: product_item
+    label: "{{ product_item }}"
+  tags: [katello,sync_plans,repo,cv,ak]
+
 #- name: create/update domains
 #  import_tasks: "{{ role_path }}/tasks/provision.yml"
 #  tags: [provision,domains,subnets,compute]

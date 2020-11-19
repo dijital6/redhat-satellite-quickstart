@@ -2,7 +2,7 @@
 - name: build sync plan products
   set_fact:
     sync_plan_products: "{{ sync_plan_products }} + [ '{{ item.0.product }}' ]"
-  loop: "{{ lookup('vars', product_item + '_product')|product(satellite_orgs)|list }}" 
+  loop: "{{ lookup('vars', product_item + '_product')|product(satellite_orgs)|list }}"
   loop_control:
     label: "{{ item.0.product }}"
   register: enable_repo_results
@@ -13,14 +13,16 @@
     sync_plan_products: "{{ sync_plan_products | unique }}"
   tags: [katello,sync_plans]
 
-- name: include the product_repos tasks
+- name: include the product_repos task
   include_tasks: product_repos.yml
   vars:
+    org_user_admin: "{{ item | json_query('[*].admin_username') | first }}"
+    org_user_pass: "{{ item | json_query('[*].admin_password') | first }}"
     product_org: "{{ item.1.name }}"
     product_label: "{{ item.0.label }}"
-    product_reposets: "{{ item.0.repositories }}"
+    product_reposets: "{{ item.0.repositories | default(omit) }}"
     product_state: "{{ item.0.state }}"
-  loop: "{{ lookup('vars', product_item + '_product')|product(satellite_orgs)|list }}" 
+  loop: "{{ lookup('vars', product_item + '_product')|product(satellite_orgs)|list }}"
   loop_control:
     label: "{{ item.0.label }}"
   tags: [katello,repo,sync_plans]
@@ -28,16 +30,16 @@
 - name: create or update content views
   block:
     - name: modifying content view
-      theforeman.foreman.katello_content_view:
-        username: "{{ satellite_admin_user }}"
-        password: "{{ satellite_user_pass }}"
+      redhat.satellite.content_view:
+        username: "{{ item | json_query('[*].admin_username') | first }}"
+        password: "{{ item | json_query('[*].admin_password') | first }}"
         server_url: "{{ satellite_url }}"
         validate_certs: "{{ satellite_verify_ssl }}"
         name: "{{ item.0.name }}"
         organization: "{{ item.1.name }}"
         repositories: "{{ item.0.repos | default(omit) }}"
         state: "{{ item.0.state | default(omit) }}"
-      loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
+      loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}"
       loop_control:
         label: "{{ item.1.name }}"
       tags: [katello,cv]
@@ -45,10 +47,11 @@
     - fail:
         msg: "The reported failed repository needs to be commented out from vars/satellite_content_views.yml for this task to execute successfully."
 
+
 - name: publish content view to library
-  theforeman.foreman.katello_content_view_version:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
+  redhat.satellite.content_view_version:
+    username: "{{ item | json_query('[*].admin_username') | first }}"
+    password: "{{ item | json_query('[*].admin_password') | first }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
     content_view: "{{ item.0.name }}"
@@ -56,7 +59,7 @@
     version: "{{ cv_default_ver }}"
     lifecycle_environments:
       - "{{ cv_default_lc }}"
-  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
+  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}"
   loop_control:
     label: "{{ item.0.name }}"
   tags: [katello,cv]
@@ -64,8 +67,6 @@
 - name: debug katello_content_view_version
   vars:
     msg: |
-      "- username: {{ satellite_admin_user }}"
-      "- password: {{ satellite_user_pass }}"
       "- server_url: {{ satellite_url }}"
       "- validate_certs: {{ satellite_verify_ssl }}"
       "- content_view: {{ item.0.name }}"
@@ -75,31 +76,32 @@
   debug:
     msg: "{{ msg }}"
     verbosity: 2
-  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
+  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}"
   loop_control:
     label: "{{ item.0.name }}"
   tags: [katello,cv]
 
 
 - name: "ensure version one of the content view is in all specified lifecyle environments"
-  theforeman.foreman.katello_content_view_version:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
+  redhat.satellite.content_view_version:
+    username: "{{ item | json_query('[*].admin_username') | first }}"
+    password: "{{ item | json_query('[*].admin_password') | first }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
     content_view: "{{ item.0.name }}"
     organization: "{{ item.1.name }}"
     version: "{{ cv_default_ver }}"
     lifecycle_environments: "{{ item.1.lifecycle_environments.0.name }}"
-  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
+  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}"
   loop_control:
     label: "{{ item.0.name }}"
   tags: [katello,cv]
 
+
 - name: create/update Activation Keys
-  theforeman.foreman.katello_activation_key:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
+  redhat.satellite.activation_key:
+    username: "{{ item | json_query('[*].admin_username') | first }}"
+    password: "{{ item | json_query('[*].admin_password') | first }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
     name: "{{ item.0.name }}"
@@ -109,16 +111,16 @@
     subscriptions: "{{ item.0.subscriptions | default(omit) }}"
     auto_attach: "{{ item.0.auto_attach | default(omit) }}"
     content_overrides: "{{ item.0.content_overrides | default(omit) }}"
-  loop: "{{ lookup('vars', product_item + '_ak')|product(satellite_orgs)|list }}" 
+  loop: "{{ lookup('vars', product_item + '_ak')|product(satellite_orgs)|list }}"
   loop_control:
     label: "{{ item.0.name }}"
   when: item.0.create
   tags: [katello,ak]
 
 - name: setup syncplan
-  theforeman.foreman.katello_sync_plan:
-    username: "{{ satellite_admin_user }}"
-    password: "{{ satellite_user_pass }}"
+  redhat.satellite.sync_plan:
+    username: "{{ item | json_query('[*].admin_username') | first }}"
+    password: "{{ item | json_query('[*].admin_password') | first }}"
     server_url: "{{ satellite_url }}"
     validate_certs: "{{ satellite_verify_ssl }}"
     name: "{{ item.1.name }}"
@@ -139,7 +141,7 @@
 - name: get sync action
   set_fact:
     sync_now: "{{ item.1.sync_right_away }}"
-  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}" 
+  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}"
   loop_control:
     label: "{{ item.0.name }}"
   tags: [katello,sync]

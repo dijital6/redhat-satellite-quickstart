@@ -1,15 +1,20 @@
 ---
+- name: set fact to enable all repos to yes or no
+  set_fact:
+    all_repos: "{{ 'yes' if 'omit' in product_reposets else 'no' }}"
+
 - name: enable Red Hat product repository
   block:
     - name: enabling product {{ product_label }}
-      theforeman.foreman.katello_repository_set:
-        username: "{{ satellite_admin_user }}"
-        password: "{{ satellite_user_pass }}"
+      redhat.satellite.repository_set:
+        username: "{{ org_user_admin }}"
+        password: "{{ org_user_pass }}"
         server_url: "{{ satellite_url }}"
         validate_certs: "{{ satellite_verify_ssl }}"
         organization: "{{ product_org }}"
         label: "{{ product_label }}"
-        repositories: "{{ product_reposets }}"
+        repositories: "{{ product_reposets | default(omit) }}"
+        all_repositories: "{{ all_repos }}"
         state: "{{ product_state }}"
       register: products_enabled
   rescue:

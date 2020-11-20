@@ -43,6 +43,7 @@
       loop_control:
         label: "{{ item.1.name }}"
       tags: [katello,cv]
+      when: item.0.name is defined
   rescue:
     - fail:
         msg: "The reported failed repository needs to be commented out from vars/satellite_content_views.yml for this task to execute successfully."
@@ -63,26 +64,10 @@
   loop_control:
     label: "{{ item.0.name }}"
   tags: [katello,cv]
-
-- name: debug katello_content_view_version
-  vars:
-    msg: |
-      "- server_url: {{ satellite_url }}"
-      "- validate_certs: {{ satellite_verify_ssl }}"
-      "- content_view: {{ item.0.name }}"
-      "- organization: {{ item.1.name }}"
-      "- version: {{ cv_default_ver }}"
-      "- lifecycle_environments: {{ item.1.lifecycle_environments.0.name }}"
-  debug:
-    msg: "{{ msg }}"
-    verbosity: 2
-  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}"
-  loop_control:
-    label: "{{ item.0.name }}"
-  tags: [katello,cv]
-
+  when: item.0.name is defined
 
 - name: "ensure version one of the content view is in all specified lifecyle environments"
+  when: item.0.name is defined
   redhat.satellite.content_view_version:
     username: "{{ item | json_query('[*].admin_username') | first }}"
     password: "{{ item | json_query('[*].admin_password') | first }}"
@@ -97,25 +82,32 @@
     label: "{{ item.0.name }}"
   tags: [katello,cv]
 
-
-- name: create/update Activation Keys
-  redhat.satellite.activation_key:
-    username: "{{ item | json_query('[*].admin_username') | first }}"
-    password: "{{ item | json_query('[*].admin_password') | first }}"
-    server_url: "{{ satellite_url }}"
-    validate_certs: "{{ satellite_verify_ssl }}"
-    name: "{{ item.0.name }}"
-    organization: "{{ item.1.name }}"
-    lifecycle_environment: "{{ item.0.lifecycle_environment }}"
-    content_view: "{{ item.0.content_view }}"
-    subscriptions: "{{ item.0.subscriptions | default(omit) }}"
-    auto_attach: "{{ item.0.auto_attach | default(omit) }}"
-    content_overrides: "{{ item.0.content_overrides | default(omit) }}"
-  loop: "{{ lookup('vars', product_item + '_ak')|product(satellite_orgs)|list }}"
-  loop_control:
-    label: "{{ item.0.name }}"
-  when: item.0.create
+- name: setup activation keys
   tags: [katello,ak]
+  block:
+    - name: create/update Activation Keys
+      redhat.satellite.activation_key:
+        username: "{{ item | json_query('[*].admin_username') | first }}"
+        password: "{{ item | json_query('[*].admin_password') | first }}"
+        server_url: "{{ satellite_url }}"
+        validate_certs: "{{ satellite_verify_ssl }}"
+        name: "{{ item.0.name }}"
+        organization: "{{ item.1.name }}"
+        lifecycle_environment: "{{ item.0.lifecycle_environment }}"
+        content_view: "{{ item.0.content_view }}"
+        subscriptions: "{{ item.0.subscriptions | default(omit) }}"
+        auto_attach: "{{ item.0.auto_attach | default(omit) }}"
+        content_overrides: "{{ item.0.content_overrides | default(omit) }}"
+      loop: "{{ lookup('vars', product_item + '_ak', errors='ignore')|product(satellite_orgs)|list }}"
+      loop_control:
+        label: "{{ item.0.name }}"
+      when:
+        - item.0.create
+        - item.0.content_view is defined
+  rescue:
+    - name: show errors
+      ansible.builtin.debug:
+        msg: "Could not find ativation key for {{ product_item }}"
 
 - name: setup syncplan
   redhat.satellite.sync_plan:
@@ -138,13 +130,19 @@
     label: "{{ sync_plan_products }}"
   tags: [katello,sync_plans]
 
-- name: get sync action
-  set_fact:
-    sync_now: "{{ item.1.sync_right_away }}"
-  loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}"
-  loop_control:
-    label: "{{ item.0.name }}"
+- name: setting variable for sync action
   tags: [katello,sync]
+  block:
+    - name: get sync action
+      set_fact:
+        sync_now: "{{ item.1.sync_right_away }}"
+      loop: "{{ lookup('vars', product_item + '_cv')|product(satellite_orgs)|list }}"
+      loop_control:
+        label: "{{ item.0.name }}"
+  rescue:
+    - name: show errors
+      ansible.builtin.debug:
+        msg: "Could not find content view {{ product_item }}"
 
 - name: import sync tasks
   import_tasks: "{{ role_path }}/tasks/sync.yml"

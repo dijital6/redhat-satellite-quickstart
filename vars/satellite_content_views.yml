@@ -29,9 +29,9 @@ rhel8_cv:
         product: *cv_product_rhel8
       - name: "Red Hat Enterprise Linux 8 for x86_64 - Supplementary RPMs 8"
         product: *cv_product_rhel8
-      - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart 8.0"
+      - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream Kickstart {{ rhel_release }}"
         product: *cv_product_rhel8
-      - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart 8.0"
+      - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS Kickstart {{ rhel_release }}"
         product: *cv_product_rhel8
       #- name: "Red Hat Satellite Tools 6.5 for RHEL 8 x86_64 RPMs x86_64"
       #  product: *cv_product_rhel8

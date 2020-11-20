@@ -18,6 +18,13 @@
         state: "{{ product_state }}"
       register: products_enabled
   rescue:
-    - debug:
-        msg: "Could not enable {{ product_label }} repository"
+    - name: fail when product cannot be enabled
+      fail:
+        msg: |
+          All defined products must be enabled for the rest of the automation to succeed.
+          You can try the following:
+            - Ensure you have a subscription to the product
+            - Try removing the list var repositories from the product vars file vars/satellite_products.yml
+            - Refresh the manifest
+            - Remove the product from the list
   tags: [katello,repo]

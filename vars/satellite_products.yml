@@ -40,48 +40,54 @@ rhel8_product:
     product: *rhel8
     repositories:
       - releasever: "{{ rhel_release }}"
-#  - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs) Extended Update Support (EUS)"
-#    label: rhel-8-for-x86_64-baseos-eus-rpms
-#    state: enabled
-#    product: &rhel8 "Red Hat Enterprise Linux for x86_64"
-#    repositories:
-#      - releasever: "8"
-#  - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)"
-#    label: rhel-8-for-x86_64-appstream-eus-rpms
-#    state: enabled
-#    product: &rhel8 "Red Hat Enterprise Linux for x86_64"
-#    repositories:
-#      - releasever: "8"
-#  - name: "Red Hat Enterprise Linux 8 for x86_64 - High Availability (RPMs) Extended Update Support (EUS)"
-#    label: rhel-8-for-x86_64-highavailability-eus-rpms
-#    state: enabled
-#    product: &rhel8 "Red Hat Enterprise Linux for x86_64"
-#    repositories:
-#      - releasever: "8"
-#  - name: "Advanced Virtualization for RHEL 8 x86_64 (RPMs)"
-#    label: advanced-virt-for-rhel-8-x86_64-rpms
-#    state: enabled
-#    product: &rhel8 "Red Hat Enterprise Linux for x86_64"
-#    repositories:
-#      - releasever: "8"
-#  - name: "Red Hat Fast Datapath for RHEL 8 (RPMS)"
-#    label: fast-datapath-for-rhel-8-x86_64-rpms
-#    state: enabled
-#    product: &rhel8 "Red Hat Enterprise Linux for x86_64"
-#    repositories:
-#      - releasever: "8"
-#  - name: "Red Hat Enterprise Linux 8 for x86_64 - High Availability (RPMs)"
-#    label: rhel-8-for-x86_64-highavailability-rpms
-#    state: enabled
-#    product: &rhel8 "Red Hat Enterprise Linux for x86_64"
-#    repositories:
-#      - releasever: "8"
+
+rhel8eus_product:
+  - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs) Extended Update Support (EUS)"
+    label: rhel-8-for-x86_64-baseos-eus-rpms
+    state: enabled
+    product: "Red Hat Enterprise Linux for x86_64"
+    repositories:
+      - releasever: "{{ rhel8_eus }}"
+  - name: "Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)"
+    label: rhel-8-for-x86_64-appstream-eus-rpms
+    state: enabled
+    product: "Red Hat Enterprise Linux for x86_64"
+    repositories:
+      - releasever: "{{ rhel8_eus }}"
+  - name: "Red Hat Enterprise Linux 8 for x86_64 - High Availability (RPMs) Extended Update Support (EUS)"
+    label: rhel-8-for-x86_64-highavailability-eus-rpms
+    state: enabled
+    product: "Red Hat Enterprise Linux for x86_64"
+    repositories:
+      - releasever: "{{ rhel8_eus }}"
+
+rhel8_advirt_product:
+  - name: "Advanced Virtualization for RHEL 8 x86_64 (RPMs)"
+    label: advanced-virt-for-rhel-8-x86_64-rpms
+    state: enabled
+    product: "Red Hat Enterprise Linux Advanced Virtualization"
+
+rhel8_fdpath_product:
+  - name: "Red Hat Fast Datapath for RHEL 8 (RPMS)"
+    label: fast-datapath-for-rhel-8-x86_64-rpms
+    state: enabled
+    product: "Red Hat Enterprise Linux Fast Datapath"
+
+rhel8_ha_product:
+  - name: "Red Hat Enterprise Linux 8 for x86_64 - High Availability (RPMs)"
+    label: rhel-8-for-x86_64-highavailability-rpms
+    state: enabled
+    product: "Red Hat Enterprise Linux High Availability for x86_64"
+    repositories:
+      - releasever: "8"
+
 #  - name: "Red Hat Enterprise Linux 8 for x86_64 - Real Time (RPMs)"
 #    label: rhel-8-for-x86_64-rt-rpms
 #    state: enabled
 #    product: &rhel8 "Red Hat Enterprise Linux for x86_64"
 #    repositories:
 #      - releasever: "8"
+
 #  - name: "Red Hat Enterprise Linux 8 for x86_64 - Real Time for NFV (RPMs)"
 #    label: rhel-8-for-x86_64-nfv-rpms
 #    state: enabled

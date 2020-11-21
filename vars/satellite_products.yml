@@ -33,13 +33,13 @@ rhel8_product:
     state: enabled
     product: *rhel8
     repositories:
-      - releasever: "{{ rhel_release }}"
+      - releasever: "{{ rhel8_release }}"
   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Kickstart)"
     label: rhel-8-for-x86_64-baseos-kickstart
     state: enabled
     product: *rhel8
     repositories:
-      - releasever: "{{ rhel_release }}"
+      - releasever: "{{ rhel8_release }}"
 
 rhel8eus_product:
   - name: "Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs) Extended Update Support (EUS)"
@@ -81,20 +81,6 @@ rhel8_ha_product:
     repositories:
       - releasever: "8"
 
-#  - name: "Red Hat Enterprise Linux 8 for x86_64 - Real Time (RPMs)"
-#    label: rhel-8-for-x86_64-rt-rpms
-#    state: enabled
-#    product: &rhel8 "Red Hat Enterprise Linux for x86_64"
-#    repositories:
-#      - releasever: "8"
-
-#  - name: "Red Hat Enterprise Linux 8 for x86_64 - Real Time for NFV (RPMs)"
-#    label: rhel-8-for-x86_64-nfv-rpms
-#    state: enabled
-#    product: &rhel8 "Red Hat Enterprise Linux for x86_64"
-#    repositories:
-#      - releasever: "8"
-
 rhel7_product:
   - name: "Red Hat Enterprise Linux 7 Server (RPMs)"
     label: rhel-7-server-rpms
@@ -108,7 +94,7 @@ rhel7_product:
     state: enabled
     product: *rhel7
     repositories:
-      - releasever: "7Server"
+      - releasever: "{{ rhel7_release }}"
         basearch: "{{ arch }}"
   - name: "Red Hat Satellite Tools {{ satellite_version }} (for RHEL 7 Server) (RPMs)"
     label: rhel-7-server-satellite-tools-{{ satellite_version }}-rpms
@@ -145,7 +131,7 @@ rhel7_product:
         basearch: "{{ arch }}"
 
 ansible_product:
-  - reposet: "Red Hat Ansible Engine {{ ansible_major }} RPMs for Red Hat Enterprise Linux {{ rhel_major }} Server"
+  - reposet: "Red Hat Ansible Engine {{ ansible_major }} RPMs for Red Hat Enterprise Linux 7 Server"
     label: rhel-7-server-ansible-2-rpms
     product: Red Hat Ansible Engine
     state: enabled
@@ -155,88 +141,99 @@ ansible_product:
     label: ansible-2.9-for-rhel-8-x86_64-rpms
     product: Red Hat Ansible Engine
     state: enabled
-    repositories:
-      - basearch: "{{ arch }}"
 
-#osp16_product:
-#  - name: "Red Hat OpenStack Platform 16.1 for RHEL 8 (RPMs)"
-#    label: openstack-16.1-for-rhel-8-x86_64-rpms
-#    product: &osp_product Red Hat OpenStack
-#    repositories:
-#      - basearch: "{{ arch }}"
-#  - name: "Red Hat OpenStack Platform 16.1 Director Deployment Tools for RHEL 8 x86_64 (RPMs)"
-#    label: openstack-16.1-deployment-tools-for-rhel-8-x86_64-rpms
-#    product: &osp_product Red Hat OpenStack
-#    repositories:
-#      - basearch: "{{ arch }}"
-
+osp16_product:
+  - name: "Red Hat OpenStack Platform 16.1 for RHEL 8 (RPMs)"
+    state: enabled
+    label: openstack-16.1-for-rhel-8-x86_64-rpms
+    product: Red Hat OpenStack
+  - name: "Red Hat OpenStack Platform 16.1 Director Deployment Tools for RHEL 8 x86_64 (RPMs)"
+    state: enabled
+    label: openstack-16.1-deployment-tools-for-rhel-8-x86_64-rpms
+    product: Red Hat OpenStack
 
 osp14_product:
-  - name: "Red Hat OpenStack Platform {{ osp_major }} for RHEL 7 (RPMs)"
-    label: "rhel-7-server-openstack-{{ osp_major }}-rpms"
+  - name: "Red Hat OpenStack Platform 14 for RHEL 7 (RPMs)"
+    label: "rhel-7-server-openstack-14-rpms"
     product: &osp_product Red Hat OpenStack
     state: enabled
     repositories:
       - basearch: "{{ arch }}"
-  - name: "Red Hat OpenStack Platform {{ osp_major }} Operational Tools for RHEL 7 (RPMs)"
-    label: "rhel-7-server-openstack-{{ osp_major }}-optools-rpms"
+  - name: "Red Hat OpenStack Platform 14 Operational Tools for RHEL 7 (RPMs)"
+    label: "rhel-7-server-openstack-14-optools-rpms"
     product: *osp_product
     state: enabled
     repositories:
       - basearch: "{{ arch }}"
-  - name: "Red Hat OpenStack Platform {{ osp_major }} Tools for RHEL 7 Server (RPMs)"
-    label: "rhel-7-server-openstack-{{ osp_major }}-tools-rpms"
+  - name: "Red Hat OpenStack Platform 14 Tools for RHEL 7 Server (RPMs)"
+    label: "rhel-7-server-openstack-14-tools-rpms"
     product: *osp_product
     state: enabled
     repositories:
       - basearch: "{{ arch }}"
-  - name: "Red Hat OpenStack Platform {{ osp_major }} Developer Tools for RHEL 7 (RPMs)"
-    label: "rhel-7-server-openstack-{{ osp_major }}-devtools-rpms"
+  - name: "Red Hat OpenStack Platform 14 Developer Tools for RHEL 7 (RPMs)"
+    label: "rhel-7-server-openstack-14-devtools-rpms"
     product: *osp_product
     state: enabled
     repositories:
       - basearch: "{{ arch }}"
 
-ceph_osd_product:
-  - name: "Red Hat Ceph Storage OSD {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)"
-    label: "rhel-7-server-rhceph-{{ ceph_major }}-osd-rpms"
-    product: Red Hat Ceph Storage OSD
-    state: enabled
-    repositories:
-      - basearch: "{{ arch }}"
-  - name: "Red Hat Ceph Storage OSD 4 for RHEL 8 x86_64 (RPMs)"
-    label: "rhceph-4-osd-for-rhel-8-x86_64-rpms"
+ceph3_osd_product:
+  - name: "Red Hat Ceph Storage OSD 3 for Red Hat Enterprise Linux 7 Server (RPMs)"
+    label: "rhel-7-server-rhceph-3-osd-rpms"
     product: Red Hat Ceph Storage OSD
     state: enabled
     repositories:
       - basearch: "{{ arch }}"
 
-ceph_mon_product:
-  - name: "Red Hat Ceph Storage MON {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)"
+ceph3_mon_product:
+  - name: "Red Hat Ceph Storage MON 3 for Red Hat Enterprise Linux 7 Server (RPMs)"
     label: "rhel-7-server-rhceph-3-mon-rpms"
     product: Red Hat Ceph Storage MON
     state: enabled
     repositories:
       - basearch: "{{ arch }}"
-  - name: "Red Hat Ceph Storage MON 4 for RHEL 8 x86_64 (RPMs)"
-    label: "rhceph-4-mon-for-rhel-8-x86_64-rpms"
-    product: Red Hat Ceph Storage MON
-    state: enabled
-    repositories:
-      - basearch: "{{ arch }}"
 
-ceph_tools_product:
-  - name: "Red Hat Ceph Storage Tools {{ ceph_major }} for Red Hat Enterprise Linux {{ rhel_major }} Server (RPMs)"
+ceph3_tools_product:
+  - name: "Red Hat Ceph Storage Tools 3 for Red Hat Enterprise Linux 7 Server (RPMs)"
     label: rhel-7-server-rhceph-3-tools-rpms
     product: Red Hat Ceph Storage
     state: enabled
     repositories:
       - basearch: "{{ arch }}"
+
+ceph4_osd_product:
+  - name: "Red Hat Ceph Storage OSD 4 for RHEL 8 x86_64 (RPMs)"
+    label: "rhceph-4-osd-for-rhel-8-x86_64-rpms"
+    product: Red Hat Ceph Storage OSD
+    state: enabled
+
+ceph4_mon_product:
+  - name: "Red Hat Ceph Storage MON 4 for RHEL 8 x86_64 (RPMs)"
+    label: "rhceph-4-mon-for-rhel-8-x86_64-rpms"
+    product: Red Hat Ceph Storage MON
+    state: enabled
+
+ceph4_tools_product:
   - name: "Red Hat Ceph Storage Tools 4 for RHEL 8 x86_64 (RPMs)"
     label: rhceph-4-tools-for-rhel-8-x86_64-rpms
     product: Red Hat Ceph Storage
     state: enabled
-    repositories:
-      - basearch: "{{ arch }}"
 
 ceph3_product: "{{ ceph3_osd_product }} + {{ ceph3_mon_product }} + {{ ceph3_tools_product }}"
+ceph4_product: "{{ ceph4_osd_product }} + {{ ceph4_mon_product }} + {{ ceph4_tools_product }}"
+osp_lastest_product: "{{ rhel8_ha_product }} + {{ rhel8_fdpath_product }} + {{ rhel8_advirt_product }}"
+
+#  - name: "Red Hat Enterprise Linux 8 for x86_64 - Real Time (RPMs)"
+#    label: rhel-8-for-x86_64-rt-rpms
+#    state: enabled
+#    product: &rhel8 "Red Hat Enterprise Linux for x86_64"
+#    repositories:
+#      - releasever: "8"
+
+#  - name: "Red Hat Enterprise Linux 8 for x86_64 - Real Time for NFV (RPMs)"
+#    label: rhel-8-for-x86_64-nfv-rpms
+#    state: enabled
+#    product: &rhel8 "Red Hat Enterprise Linux for x86_64"
+#    repositories:
+#      - releasever: "8"

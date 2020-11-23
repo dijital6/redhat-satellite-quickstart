@@ -2,23 +2,6 @@
 #- name: ensure the satellite server meets the documented requirements
 #  include_tasks: pre-flight-checklist.yml
 #  when: check_requirements
-
-- name: get all repositories
-  redhat.satellite.resource_info:
-    username: "admin"
-    password: "welcome"
-    server_url: "{{ satellite_url }}"
-    validate_certs: "{{ satellite_verify_ssl }}"
-    organization: DEMO2
-    resource: repository_sets
-    search: label = openstack-16.1-for-rhel-8-x86_64-rpms
-    full_details: yes
-  register: repositories
-
-- debug:
-    var: repositories
-#- meta: end_play
-
 - name: install required package python apypie
   command: foreman-maintain packages install -y python2-apypie
   args:

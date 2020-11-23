@@ -197,7 +197,7 @@ ceph3_mon_product:
 ceph3_tools_product:
   - name: "Red Hat Ceph Storage Tools 3 for Red Hat Enterprise Linux 7 Server (RPMs)"
     label: rhel-7-server-rhceph-3-tools-rpms
-    product: Red Hat Ceph Storage
+    product: "Red Hat Enterprise Linux Server"
     state: enabled
     repositories:
       - basearch: "{{ arch }}"
@@ -217,7 +217,7 @@ ceph4_mon_product:
 ceph4_tools_product:
   - name: "Red Hat Ceph Storage Tools 4 for RHEL 8 x86_64 (RPMs)"
     label: rhceph-4-tools-for-rhel-8-x86_64-rpms
-    product: Red Hat Ceph Storage
+    product: "Red Hat Enterprise Linux for x86_64"
     state: enabled
 
 ceph3_product: "{{ ceph3_osd_product }} + {{ ceph3_mon_product }} + {{ ceph3_tools_product }}"

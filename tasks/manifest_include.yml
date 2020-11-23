@@ -1,0 +1,73 @@
+---
+- name: check if manifest exist
+  stat:
+    path: "{{ manifest_download_dir }}/{{ org_vars.name }}_{{ org_vars.redhat_manifest.name }}.zip"
+  register: manifest_file
+
+- name: create a subscription allocations with subscriptions and download the manifest
+  redhat.satellite.redhat_manifest:
+    username: "{{ rhsm_user }}"
+    password: "{{ rhsm_password }}"
+    name: "{{ org_vars.redhat_manifest.name }}"
+    pool_id: "{{ item.id }}"
+    quantity: "{{ item.quantity }}"
+    path: "{{ manifest_download_dir }}/{{ org_vars.name }}_{{ org_vars.redhat_manifest.name }}.zip"
+    state: "{{ org_vars.redhat_manifest.state }}"
+    pool_state: "{{ item.state }}"
+    validate_certs: "{{ rhsm_verify_ssl }}"
+  loop: "{{ org_vars.redhat_manifest.pool }}"
+  loop_control:
+    label: "{{ org_vars.redhat_manifest.name }}"
+  when: not org_vars.redhat_manifest.use_local_manifest and not org_vars.redhat_manifest.download_manifest
+  register: rhsm_manifest
+  tags: [katello,manifest]
+
+- name: download satellite manifest from customer portal
+  redhat.satellite.redhat_manifest:
+    username: "{{ rhsm_user }}"
+    password: "{{ rhsm_password }}"
+    uuid: "{{ org_vars.redhat_manifest.uuid }}"
+    path: "{{ manifest_download_dir }}/{{ org_vars.name }}_{{ org_vars.redhat_manifest.name }}.zip"
+    state: "{{ org_vars.redhat_manifest.state }}"
+    validate_certs: "{{ rhsm_verify_ssl }}"
+  when: org_vars.redhat_manifest.download_manifest
+  register: download_rhsm_manifest
+  tags: [katello,manifest]
+
+- name: copy local manifest to satellite
+  copy:
+    src: "{{ local_manifest_path }}"
+    dest: "{{ manifest_download_dir }}/{{ org_vars.name }}_{{ org_vars.redhat_manifest.name }}.zip"
+    mode: 0644
+  register: copy_rhsm_manifest
+  when: org_vars.redhat_manifest.use_local_manifest
+  tags: [katello,manifest]
+
+- name: declare var upload_manifest
+  set_fact:
+    upload_manifest: "{{ 'yes' if copy_rhsm_manifest.changed or rhsm_manifest.changed or not manifest_file.stat.exists else 'no' }}"
+
+- name: attach manifest to Satellite org
+  redhat.satellite.subscription_manifest:
+    username: "{{ org_vars.admin_username }}"
+    password: "{{ org_vars.admin_password }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_verify_ssl }}"
+    organization: "{{ org_vars.name }}"
+    manifest_path: "{{ manifest_download_dir }}/{{ org_vars.name }}_{{ org_vars.redhat_manifest.name }}.zip"
+    redhat_repository_url: "{{ org_vars.redhat_manifest.cdn_url| default(omit) }}"
+    state: "{{ org_vars.redhat_manifest.state }}"
+  tags: [katello,manifest]
+  register: attach_manifest
+  when: upload_manifest|bool or org_vars.redhat_manifest.manifest_upload|bool
+
+- name: refresh manifest
+  redhat.satellite.subscription_manifest:
+    username: "{{ org_vars.admin_username }}"
+    password: "{{ org_vars.admin_password }}"
+    server_url: "{{ satellite_url }}"
+    validate_certs: "{{ satellite_verify_ssl }}"
+    organization: "{{ org_vars.name }}"
+    state: "refreshed"
+  tags: [katello,manifest]
+  when: attach_manifest.changed or download_rhsm_manifest.changed

@@ -2,17 +2,17 @@
 #- name: ensure the satellite server meets the documented requirements
 #  include_tasks: pre-flight-checklist.yml
 #  when: check_requirements
-- name: install required package python apypie
-  command: foreman-maintain packages install -y python2-apypie
-  when: not apypie_installed|bool
-
 - name: Gather the package facts
   package_facts:
     manager: auto
 
 - name: check if is installed python2-apypie
   set_fact: 
-    apypie_installed: "{{ 'yes' if 'foobar' in ansible_facts.packages else 'no' }}"
+    apypie_installed: "{{ 'yes' if 'python2-apypie' in ansible_facts.packages else 'no' }}"
+
+- name: install required package python apypie
+  command: foreman-maintain packages install -y python2-apypie
+  when: not apypie_installed|bool
 
 - name: include satellite content views variables
   include_vars: "../vars/satellite_content_views.yml"

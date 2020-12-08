@@ -4,8 +4,15 @@
 #  when: check_requirements
 - name: install required package python apypie
   command: foreman-maintain packages install -y python2-apypie
-  args:
-    creates: /usr/lib/python2.7/site-packages/apypie
+  when: not apypie_installed|bool
+
+- name: Gather the package facts
+  package_facts:
+    manager: auto
+
+- name: check if is installed python2-apypie
+  set_fact: 
+    apypie_installed: "{{ 'yes' if 'foobar' in ansible_facts.packages else 'no' }}"
 
 - name: include satellite content views variables
   include_vars: "../vars/satellite_content_views.yml"

@@ -9,10 +9,18 @@
 - name: check if is installed python2-apypie
   set_fact: 
     apypie_installed: "{{ 'yes' if 'python2-apypie' in ansible_facts.packages else 'no' }}"
+    satcollection_installed: "{{ 'yes' if 'ansible-collection-redhat-satellite' in ansible_facts.packages else 'no' }}"
 
 - name: install required package python apypie
   command: foreman-maintain packages install -y python2-apypie
   when: not apypie_installed|bool
+
+- name: install required package ansible-collection-redhat-satellite
+  command: foreman-maintain packages install -y ansible-collection-redhat-satellite
+  when: >
+    not apypie_installed|bool and
+    not satcollection_installed|bool and
+    satellite_is_ansible_controller|bool
 
 - name: include satellite content views variables
   include_vars: "../vars/satellite_content_views.yml"

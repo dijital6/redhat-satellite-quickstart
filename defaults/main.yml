@@ -9,6 +9,11 @@ satellite_user_pass: "{{ vault_katello_admin_password | default('changeme') }}"
 satellite_url: "https://{{ inventory_hostname }}"
 satellite_verify_ssl: false
 
+# Use Satellite server as the ansible controller
+# Set this to yes to install the Satellite Ansible Modules
+# on the Satellite server
+satellite_is_ansible_controller: no
+
 # Satellite manifest
 force_manifest_upload: false         # set to true to always upload manifest
 local_manifest_path: ""              # set path to dump downloaded manifest
